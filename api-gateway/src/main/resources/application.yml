@@ -1,0 +1,23 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      # En la versión MVC, a veces las rutas se definen directamente bajo 'mvc'
+      # pero la versión más reciente usa una estructura estándar.
+      # Vamos a probar la configuración específica para MVC:
+      mvc:
+        routes:
+          - id: ms-usuarios-route
+            uri: http://localhost:8081
+            predicates:
+              - Path=/api/v1/usuarios/**
+
+# Logs para ver qué pasa en el motor MVC
+logging:
+  level:
+    org.springframework.cloud.gateway.server: DEBUG
+    org.springframework.web: DEBUG
