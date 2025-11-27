@@ -15,8 +15,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 @Service
 public class KeycloakService {
@@ -46,10 +45,18 @@ public class KeycloakService {
         // 2. Preparar el usuario (Mapeo corregido)
         UserRepresentation user = new UserRepresentation();
         user.setUsername(dto.getUsername());
-        user.setEmail(dto.getCorreo()); // CAMBIO: dto.correo -> keycloak.email
+        user.setEmail(dto.getCorreo());
+        user.setFirstName(dto.getNombre());
+        user.setLastName(dto.getApellido());
         user.setEnabled(true);
         user.setEmailVerified(true);
-        // NOTA: No seteamos firstName ni lastName porque ya no existen en tu DTO
+
+        if(dto.getTelefono() != null)
+        {
+            Map<String, List<String>> attributes = new HashMap<>();
+            attributes.put("phoneNumber", Collections.singletonList(dto.getTelefono()));
+            user.setAttributes(attributes);
+        }
 
         // 3. Preparar la contraseña
         CredentialRepresentation credential = new CredentialRepresentation();

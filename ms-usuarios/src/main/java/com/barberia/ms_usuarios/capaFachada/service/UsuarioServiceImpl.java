@@ -27,8 +27,6 @@ public class UsuarioServiceImpl implements IUsuarioService {
             throw new RuntimeException("El username ya existe en la base de datos local");
         }
 
-        System.out.println(">>> Verificando correo: " + dto.getCorreo());
-
         if (usuarioRepository.existsByCorreo(dto.getCorreo())) {
             throw new RuntimeException("El correo ya existe en la base de datos local");
         }
@@ -39,6 +37,9 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.setUsername(dto.getUsername());
+        nuevoUsuario.setNombre(dto.getNombre());
+        nuevoUsuario.setApellido(dto.getApellido());
+        nuevoUsuario.setTelefono(dto.getTelefono());
         nuevoUsuario.setCorreo(dto.getCorreo());
         nuevoUsuario.setPassword(dto.getPassword());
         nuevoUsuario.setRol(dto.getRol());

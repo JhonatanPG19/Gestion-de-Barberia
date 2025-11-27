@@ -16,6 +16,15 @@ public class Usuario {
     private String username;
 
     @Column(nullable = false)
+    private String nombre;
+
+    @Column(nullable = false)
+    private String apellido;
+
+    @Column(nullable = false)
+    private String telefono;
+
+    @Column(nullable = false)
     private String password; // Se guardará, aunque Keycloak maneja la auth real
 
     @Column(nullable = false, unique = true)
