@@ -12,47 +12,80 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${rabbitmq.queue.reserva.creada}")
-    private String reservaCreadaQueue;
+    @Value("${rabbitmq.exchange.notificaciones}")
+    private String exchange;
 
-    @Value("${rabbitmq.queue.reserva.cancelada}")
-    private String reservaCanceladaQueue;
+    @Value("${rabbitmq.queue.reserva-creada}")
+    private String queueReservaCreada;
 
-    @Value("${rabbitmq.queue.reserva.modificada}")
-    private String reservaModificadaQueue;
+    @Value("${rabbitmq.queue.reserva-confirmada}")
+    private String queueReservaConfirmada;
 
-    @Value("${rabbitmq.exchange.reservas}")
-    private String reservasExchange;
+    @Value("${rabbitmq.queue.reserva-cancelada}")
+    private String queueReservaCancelada;
 
-    @Value("${rabbitmq.routing.key.creada}")
-    private String routingKeyCreada;
+    @Value("${rabbitmq.queue.reserva-reprogramada}")
+    private String queueReservaReprogramada;
 
-    @Value("${rabbitmq.routing.key.cancelada}")
-    private String routingKeyCancelada;
+    @Value("${rabbitmq.queue.servicio-iniciado}")
+    private String queueServicioIniciado;
 
-    @Value("${rabbitmq.routing.key.modificada}")
-    private String routingKeyModificada;
+    @Value("${rabbitmq.queue.servicio-completado}")
+    private String queueServicioCompletado;
+
+    @Value("${rabbitmq.routing-key.reserva-creada}")
+    private String routingKeyReservaCreada;
+
+    @Value("${rabbitmq.routing-key.reserva-confirmada}")
+    private String routingKeyReservaConfirmada;
+
+    @Value("${rabbitmq.routing-key.reserva-cancelada}")
+    private String routingKeyReservaCancelada;
+
+    @Value("${rabbitmq.routing-key.reserva-reprogramada}")
+    private String routingKeyReservaReprogramada;
+
+    @Value("${rabbitmq.routing-key.servicio-iniciado}")
+    private String routingKeyServicioIniciado;
+
+    @Value("${rabbitmq.routing-key.servicio-completado}")
+    private String routingKeyServicioCompletado;
+
+    // Exchange
+    @Bean
+    public TopicExchange notificacionesExchange() {
+        return new TopicExchange(exchange);
+    }
 
     // Queues
     @Bean
     public Queue reservaCreadaQueue() {
-        return new Queue(reservaCreadaQueue, true); // durable = true
+        return new Queue(queueReservaCreada, true);
+    }
+
+    @Bean
+    public Queue reservaConfirmadaQueue() {
+        return new Queue(queueReservaConfirmada, true);
     }
 
     @Bean
     public Queue reservaCanceladaQueue() {
-        return new Queue(reservaCanceladaQueue, true);
+        return new Queue(queueReservaCancelada, true);
     }
 
     @Bean
-    public Queue reservaModificadaQueue() {
-        return new Queue(reservaModificadaQueue, true);
+    public Queue reservaReprogramadaQueue() {
+        return new Queue(queueReservaReprogramada, true);
     }
 
-    // Exchange
     @Bean
-    public TopicExchange reservasExchange() {
-        return new TopicExchange(reservasExchange);
+    public Queue servicioIniciadoQueue() {
+        return new Queue(queueServicioIniciado, true);
+    }
+
+    @Bean
+    public Queue servicioCompletadoQueue() {
+        return new Queue(queueServicioCompletado, true);
     }
 
     // Bindings
@@ -60,37 +93,60 @@ public class RabbitMQConfig {
     public Binding reservaCreadaBinding() {
         return BindingBuilder
                 .bind(reservaCreadaQueue())
-                .to(reservasExchange())
-                .with(routingKeyCreada);
+                .to(notificacionesExchange())
+                .with(routingKeyReservaCreada);
+    }
+
+    @Bean
+    public Binding reservaConfirmadaBinding() {
+        return BindingBuilder
+                .bind(reservaConfirmadaQueue())
+                .to(notificacionesExchange())
+                .with(routingKeyReservaConfirmada);
     }
 
     @Bean
     public Binding reservaCanceladaBinding() {
         return BindingBuilder
                 .bind(reservaCanceladaQueue())
-                .to(reservasExchange())
-                .with(routingKeyCancelada);
+                .to(notificacionesExchange())
+                .with(routingKeyReservaCancelada);
     }
 
     @Bean
-    public Binding reservaModificadaBinding() {
+    public Binding reservaReprogramadaBinding() {
         return BindingBuilder
-                .bind(reservaModificadaQueue())
-                .to(reservasExchange())
-                .with(routingKeyModificada);
+                .bind(reservaReprogramadaQueue())
+                .to(notificacionesExchange())
+                .with(routingKeyReservaReprogramada);
+    }
+
+    @Bean
+    public Binding servicioIniciadoBinding() {
+        return BindingBuilder
+                .bind(servicioIniciadoQueue())
+                .to(notificacionesExchange())
+                .with(routingKeyServicioIniciado);
+    }
+
+    @Bean
+    public Binding servicioCompletadoBinding() {
+        return BindingBuilder
+                .bind(servicioCompletadoQueue())
+                .to(notificacionesExchange())
+                .with(routingKeyServicioCompletado);
     }
 
     // Message Converter
     @Bean
-    public MessageConverter messageConverter() {
+    public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
-    // RabbitTemplate
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(messageConverter());
+        rabbitTemplate.setMessageConverter(jsonMessageConverter());
         return rabbitTemplate;
     }
 }
