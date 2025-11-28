@@ -1,14 +1,17 @@
 package co.edu.unicauca.barbero_service.service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.edu.unicauca.barbero_service.dto.RegistrarBarberoDTO;
 import co.edu.unicauca.barbero_service.exception.ResourceNotFoundException;
 import co.edu.unicauca.barbero_service.model.Barbero;
+import co.edu.unicauca.barbero_service.model.EstadoBarbero;
 import co.edu.unicauca.barbero_service.repository.BarberoRepository;
 
 @Service
@@ -56,8 +59,36 @@ public class BarberoService {
     @Transactional
     public void delete(Integer id) {
         Barbero existing = findById(id);
-        existing.setEstado("inactivo");
+        existing.setEstado(EstadoBarbero.inactivo);
         existing.setUpdatedAt(LocalDateTime.now());
         repository.save(existing);
+    }
+
+    @Transactional
+    public Barbero registrarDesdeDTO(RegistrarBarberoDTO dto) {
+        if (repository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("Ya existe un barbero con ese email: " + dto.getEmail());
+        }
+
+        Barbero nuevo = new Barbero();
+        nuevo.setNombre(dto.getNombre());
+        nuevo.setTelefono(dto.getTelefono());
+        nuevo.setEmail(dto.getEmail());
+        nuevo.setEstado(EstadoBarbero.activo); // Por defecto
+        nuevo.setCreatedAt(LocalDateTime.now());
+        // Horarios por defecto o nulos
+        nuevo.setHorarioInicioLaboral(LocalTime.of(8, 0));
+        nuevo.setHorarioFinLaboral(LocalTime.of(18, 0));
+        nuevo.setDiasLaborables("Lunes,Martes,Miercoles,Jueves,Viernes,Sabado");
+
+        return repository.save(nuevo);
+    }
+
+    @Transactional
+    public void actualizarEstado(Integer id, EstadoBarbero nuevoEstado) {
+        Barbero barbero = findById(id);
+        barbero.setEstado(nuevoEstado);
+        barbero.setUpdatedAt(LocalDateTime.now());
+        repository.save(barbero);
     }
 }
