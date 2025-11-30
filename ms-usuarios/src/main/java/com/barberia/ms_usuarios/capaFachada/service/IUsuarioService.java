@@ -16,4 +16,6 @@ public interface IUsuarioService {
 
     // Para listar (Admin)
     List<Usuario> listarUsuarios();
+
+    Usuario obtenerUsuarioPorId(Integer id);
 }

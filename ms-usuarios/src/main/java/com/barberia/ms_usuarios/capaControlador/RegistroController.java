@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/usuarios")
 public class RegistroController {
-
 
     private final IUsuarioService usuarioService; // Inyectamos la Interfaz, no la implementación
 
@@ -50,7 +50,6 @@ public class RegistroController {
         }
     }
 
-
     @GetMapping("/perfil")
     public ResponseEntity<?> obtenerMiPerfil() {
         // 1. Obtener quién es el usuario autenticado desde el Token JWT
@@ -65,8 +64,6 @@ public class RegistroController {
         return ResponseEntity.ok(respuesta);
     }
 
-
-    // 2. Endpoint PROTEGIDO (Solo ADMIN, crea empleados/barberos)
     @PostMapping("/admin/crear-empleado")
     @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Usuario> registrarEmpleado(@RequestBody RegistroUsuarioDTO dto) {
@@ -80,6 +77,19 @@ public class RegistroController {
     public ResponseEntity<List<Usuario>> listarUsuarios() {
         List<Usuario> usuarios = usuarioService.listarUsuarios();
         return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
+    public ResponseEntity<Usuario> obtenerUsuarioPorId(@PathVariable Integer id) {
+        try{
+            return ResponseEntity.ok(usuarioService.obtenerUsuarioPorId(id));
+        }
+        catch (NoSuchElementException e)
+        {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
 
