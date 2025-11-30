@@ -1,0 +1,44 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      # En la versi�n MVC, a veces las rutas se definen directamente bajo 'mvc'
+      # pero la versi�n m�s reciente usa una estructura est�ndar.
+      # Vamos a probar la configuraci�n espec�fica para MVC:
+      mvc:
+        routes:
+          - id: ms-usuarios-route
+            uri: http://localhost:8081
+            predicates:
+              - Path=/api/v1/usuarios/**
+
+          - id: ms-barberos-route
+            uri: http://localhost:8082 # Puerto acordado para Barberos
+            predicates:
+              - Path=/api/v1/barberos/**
+
+          - id: ms-servicios-route
+            uri: http://localhost:8083 # Puerto acordado para Servicios
+            predicates:
+              - Path=/api/v1/servicios/**
+
+          - id: ms-reservas-route
+            uri: http://localhost:8084 # Puerto acordado para Reservas
+            predicates:
+              - Path=/api/v1/reservas/**
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/BarberiaRealm
+          jwk-set-uri: http://localhost:8080/realms/BarberiaRealm/protocol/openid-connect/certs
+
+# Logs para ver qu� pasa en el motor MVC
+logging:
+  level:
+    org.springframework.cloud.gateway.server: DEBUG
+    org.springframework.web: DEBUG
