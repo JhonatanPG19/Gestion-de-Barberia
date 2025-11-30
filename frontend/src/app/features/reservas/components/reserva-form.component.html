@@ -1,0 +1,50 @@
+<section class="form-card">
+  <header>
+    <p class="eyebrow">Nueva reserva</p>
+    <h2>Agenda una cita</h2>
+    <p class="helper">Completa la información del cliente para programar el servicio.</p>
+  </header>
+
+  <form [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+    <div class="field-group">
+      <label for="cliente">Nombre del cliente</label>
+      <input id="cliente" type="text" formControlName="cliente" placeholder="Ej: Juan Pérez" />
+      <span class="error" *ngIf="campoInvalido('cliente')">Ingresa al menos 3 caracteres.</span>
+    </div>
+
+    <div class="field-group">
+      <label for="telefono">Teléfono</label>
+      <input id="telefono" type="tel" formControlName="telefono" placeholder="3120000000" />
+      <span class="error" *ngIf="campoInvalido('telefono')">El teléfono debe tener entre 7 y 10 dígitos.</span>
+    </div>
+
+    <div class="field-group">
+      <label for="servicio">Servicio</label>
+      <select id="servicio" formControlName="servicio">
+        <option value="" disabled>Selecciona un servicio</option>
+        <option *ngFor="let servicio of serviciosDisponibles" [value]="servicio">{{ servicio }}</option>
+      </select>
+      <span class="error" *ngIf="campoInvalido('servicio')">Selecciona un servicio.</span>
+    </div>
+
+    <div class="grid-two">
+      <div class="field-group">
+        <label for="fecha">Fecha</label>
+        <input id="fecha" type="date" formControlName="fecha" />
+        <span class="error" *ngIf="campoInvalido('fecha')">Selecciona una fecha.</span>
+      </div>
+      <div class="field-group">
+        <label for="hora">Hora</label>
+        <input id="hora" type="time" formControlName="hora" />
+        <span class="error" *ngIf="campoInvalido('hora')">Selecciona una hora.</span>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label for="notas">Notas</label>
+      <textarea id="notas" rows="3" formControlName="notas" placeholder="Preferencias, recordatorios, etc."></textarea>
+    </div>
+
+    <button type="submit">Guardar reserva</button>
+  </form>
+</section>

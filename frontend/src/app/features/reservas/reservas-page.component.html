@@ -1,0 +1,20 @@
+<section class="reservas-page">
+  <div class="hero">
+    <p class="eyebrow">Reservas</p>
+    <h1>Controla la agenda de tu barbería</h1>
+    <p class="helper">{{ heroSubtitle() }}</p>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+  </div>
+
+  <div class="grid">
+    <app-reserva-form (crear)="onCrear($event)"></app-reserva-form>
+    <app-reserva-list
+      [reservas]="reservas()"
+      [resumen]="resumen()"
+      [estadoActual]="estadoActual()"
+      [loading]="loading()"
+      (estadoChange)="onFiltroChange($event)"
+      (actualizarEstado)="onActualizarEstado($event)"
+    ></app-reserva-list>
+  </div>
+</section>
