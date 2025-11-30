@@ -1,0 +1,203 @@
+{
+  "info": {
+    "name": "Reservas Service API",
+    "description": "Colección de requests para el microservicio de reservas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/actuator/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["actuator", "health"]
+        }
+      }
+    },
+    {
+      "name": "Crear Reserva",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clienteId\": 1,\n  \"barberoId\": 1,\n  \"servicioId\": 1,\n  \"fechaHora\": \"2025-12-05T10:00:00\",\n  \"observaciones\": \"Primera visita\",\n  \"esWalkIn\": false\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/reservas",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "reservas"]
+        }
+      }
+    },
+    {
+      "name": "Obtener Reserva por ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/reservas/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "reservas", "1"]
+        }
+      }
+    },
+    {
+      "name": "Obtener Reservas de Cliente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/reservas/cliente/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "reservas", "cliente", "1"]
+        }
+      }
+    },
+    {
+      "name": "Obtener Reservas de Barbero",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/reservas/barbero/1?fecha=2025-12-01",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "reservas", "barbero", "1"],
+          "query": [
+            {
+              "key": "fecha",
+              "value": "2025-12-01"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Obtener Horarios Disponibles",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/reservas/disponibilidad?barberoId=1&servicioId=1&fecha=2025-12-05",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "reservas", "disponibilidad"],
+          "query": [
+            {
+              "key": "barberoId",
+              "value": "1"
+            },
+            {
+              "key": "servicioId",
+              "value": "1"
+            },
+            {
+              "key": "fecha",
+              "value": "2025-12-05"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Confirmar Reserva",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/reservas/1/confirmar",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "reservas", "1", "confirmar"]
+        }
+      }
+    },
+    {
+      "name": "Iniciar Servicio",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/reservas/1/iniciar",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "reservas", "1", "iniciar"]
+        }
+      }
+    },
+    {
+      "name": "Completar Servicio",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/reservas/1/completar",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "reservas", "1", "completar"]
+        }
+      }
+    },
+    {
+      "name": "Reprogramar Reserva",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nuevaFechaHora\": \"2025-12-06T11:00:00\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/reservas/1/reprogramar",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "reservas", "1", "reprogramar"]
+        }
+      }
+    },
+    {
+      "name": "Cancelar Reserva",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/reservas/1?motivo=Cliente canceló",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "reservas", "1"],
+          "query": [
+            {
+              "key": "motivo",
+              "value": "Cliente canceló"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Obtener Cola de Espera",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/reservas/cola-espera",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "reservas", "cola-espera"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081"
+    }
+  ]
+}
