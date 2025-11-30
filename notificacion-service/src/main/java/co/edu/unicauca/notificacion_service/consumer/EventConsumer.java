@@ -14,7 +14,7 @@ public class EventConsumer {
 
     private final NotificacionService notificacionService;
 
-    @RabbitListener(queues = "${rabbitmq.queue.reserva.creada}")
+    @RabbitListener(queues = "${rabbitmq.queue.reserva-creada}", containerFactory = "rabbitListenerContainerFactory")
     public void consumirEventoReservaCreada(ReservaEventoDTO evento) {
         try {
             log.info("Evento recibido - Reserva Creada: {}", evento);
@@ -24,7 +24,17 @@ public class EventConsumer {
         }
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.reserva.cancelada}")
+    @RabbitListener(queues = "${rabbitmq.queue.reserva-confirmada}", containerFactory = "rabbitListenerContainerFactory")
+    public void consumirEventoReservaConfirmada(ReservaEventoDTO evento) {
+        try {
+            log.info("Evento recibido - Reserva Confirmada: {}", evento);
+            notificacionService.procesarEventoReservaCreada(evento);
+        } catch (Exception e) {
+            log.error("Error procesando evento de reserva confirmada: {}", e.getMessage(), e);
+        }
+    }
+
+    @RabbitListener(queues = "${rabbitmq.queue.reserva-cancelada}", containerFactory = "rabbitListenerContainerFactory")
     public void consumirEventoReservaCancelada(ReservaEventoDTO evento) {
         try {
             log.info("Evento recibido - Reserva Cancelada: {}", evento);
@@ -34,13 +44,35 @@ public class EventConsumer {
         }
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.reserva.modificada}")
-    public void consumirEventoReservaModificada(ReservaEventoDTO evento) {
+    @RabbitListener(queues = "${rabbitmq.queue.reserva-reprogramada}", containerFactory = "rabbitListenerContainerFactory")
+    public void consumirEventoReservaReprogramada(ReservaEventoDTO evento) {
         try {
-            log.info("Evento recibido - Reserva Modificada: {}", evento);
+            log.info("Evento recibido - Reserva Reprogramada: {}", evento);
             notificacionService.procesarEventoReservaModificada(evento);
         } catch (Exception e) {
-            log.error("Error procesando evento de reserva modificada: {}", e.getMessage(), e);
+            log.error("Error procesando evento de reserva reprogramada: {}", e.getMessage(), e);
+        }
+    }
+
+    @RabbitListener(queues = "${rabbitmq.queue.servicio-iniciado}", containerFactory = "rabbitListenerContainerFactory")
+    public void consumirEventoServicioIniciado(ReservaEventoDTO evento) {
+        try {
+            log.info("Evento recibido - Servicio Iniciado: {}", evento);
+            // Puedes crear un nuevo método en NotificacionService para este evento
+            notificacionService.procesarEventoReservaCreada(evento);
+        } catch (Exception e) {
+            log.error("Error procesando evento de servicio iniciado: {}", e.getMessage(), e);
+        }
+    }
+
+    @RabbitListener(queues = "${rabbitmq.queue.servicio-completado}", containerFactory = "rabbitListenerContainerFactory")
+    public void consumirEventoServicioCompletado(ReservaEventoDTO evento) {
+        try {
+            log.info("Evento recibido - Servicio Completado: {}", evento);
+            // Puedes crear un nuevo método en NotificacionService para este evento
+            notificacionService.procesarEventoReservaCreada(evento);
+        } catch (Exception e) {
+            log.error("Error procesando evento de servicio completado: {}", e.getMessage(), e);
         }
     }
 }

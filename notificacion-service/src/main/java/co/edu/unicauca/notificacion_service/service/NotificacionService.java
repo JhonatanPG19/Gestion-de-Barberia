@@ -18,7 +18,7 @@ public class NotificacionService {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public void procesarEventoReservaCreada(ReservaEventoDTO evento) {
-        log.info("Procesando evento de reserva creada: {}", evento.getReservaId());
+        log.info("Procesando evento de reserva creada: {}", evento.getId());
 
         String mensaje = construirMensajeReservaCreada(evento);
         
@@ -27,14 +27,14 @@ public class NotificacionService {
                 .asunto("Confirmación de Reserva - Barbería")
                 .mensaje(mensaje)
                 .tipo(TipoNotificacion.RESERVA_CREADA)
-                .reservaId(evento.getReservaId())
+                .reservaId(evento.getId())
                 .build();
 
         emailService.enviarEmail(notificacion);
     }
 
     public void procesarEventoReservaCancelada(ReservaEventoDTO evento) {
-        log.info("Procesando evento de reserva cancelada: {}", evento.getReservaId());
+        log.info("Procesando evento de reserva cancelada: {}", evento.getId());
 
         String mensaje = construirMensajeReservaCancelada(evento);
         
@@ -43,14 +43,14 @@ public class NotificacionService {
                 .asunto("Cancelación de Reserva - Barbería")
                 .mensaje(mensaje)
                 .tipo(TipoNotificacion.RESERVA_CANCELADA)
-                .reservaId(evento.getReservaId())
+                .reservaId(evento.getId())
                 .build();
 
         emailService.enviarEmail(notificacion);
     }
 
     public void procesarEventoReservaModificada(ReservaEventoDTO evento) {
-        log.info("Procesando evento de reserva modificada: {}", evento.getReservaId());
+        log.info("Procesando evento de reserva modificada: {}", evento.getId());
 
         String mensaje = construirMensajeReservaModificada(evento);
         
@@ -59,7 +59,7 @@ public class NotificacionService {
                 .asunto("Modificación de Reserva - Barbería")
                 .mensaje(mensaje)
                 .tipo(TipoNotificacion.RESERVA_MODIFICADA)
-                .reservaId(evento.getReservaId())
+                .reservaId(evento.getId())
                 .build();
 
         emailService.enviarEmail(notificacion);
@@ -86,13 +86,13 @@ public class NotificacionService {
                 evento.getClienteNombre(),
                 evento.getFechaHora().format(formatter),
                 evento.getBarberoNombre(),
-                evento.getServicio()
+                evento.getServicioNombre()
         );
     }
 
     private String construirMensajeReservaCancelada(ReservaEventoDTO evento) {
-        String motivoTexto = evento.getMotivoCancelacion() != null 
-                ? "\nMotivo: " + evento.getMotivoCancelacion() 
+        String observacionesTexto = evento.getObservaciones() != null 
+                ? "\nObservaciones: " + evento.getObservaciones() 
                 : "";
 
         return String.format("""
@@ -114,8 +114,8 @@ public class NotificacionService {
                 evento.getClienteNombre(),
                 evento.getFechaHora().format(formatter),
                 evento.getBarberoNombre(),
-                evento.getServicio(),
-                motivoTexto
+                evento.getServicioNombre(),
+                observacionesTexto
         );
     }
 
@@ -138,7 +138,7 @@ public class NotificacionService {
                 evento.getClienteNombre(),
                 evento.getFechaHora().format(formatter),
                 evento.getBarberoNombre(),
-                evento.getServicio()
+                evento.getServicioNombre()
         );
     }
 }

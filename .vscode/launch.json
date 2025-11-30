@@ -19,6 +19,16 @@
             "projectName": "servicios-service",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-NotificacionServiceApplication<notificacion-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "co.edu.unicauca.notificacion_service.NotificacionServiceApplication",
+            "projectName": "notificacion-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
