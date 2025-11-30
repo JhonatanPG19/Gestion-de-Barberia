@@ -1,0 +1,82 @@
+<!-- src/app/features/admin/barberos/barbero-form/barbero-form.component.html -->
+<div class="container py-4">
+  <h2>{{ editMode ? 'Editar Barbero' : 'Nuevo Barbero' }}</h2>
+
+  <form [formGroup]="barberoForm" (ngSubmit)="onSubmit()">
+    <!-- Nombre -->
+    <div class="mb-3">
+      <label class="form-label">Nombre *</label>
+      <input type="text" class="form-control" formControlName="nombre">
+      <div *ngIf="barberoForm.get('nombre')?.invalid && barberoForm.get('nombre')?.touched" class="text-danger">
+        Nombre es obligatorio
+      </div>
+    </div>
+
+    <!-- Teléfono -->
+    <div class="mb-3">
+      <label class="form-label">Teléfono *</label>
+      <input type="text" class="form-control" formControlName="telefono">
+      <div *ngIf="barberoForm.get('telefono')?.invalid && barberoForm.get('telefono')?.touched" class="text-danger">
+        Teléfono es obligatorio
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3">
+      <label class="form-label">Email *</label>
+      <input type="email" class="form-control" formControlName="email">
+      <div *ngIf="barberoForm.get('email')?.invalid && barberoForm.get('email')?.touched" class="text-danger">
+        Email inválido
+      </div>
+    </div>
+
+    <!-- Estado -->
+    <div class="mb-3">
+      <label class="form-label">Estado</label>
+      <select class="form-select" formControlName="estado">
+        <option value="activo">Activo</option>
+        <option value="inactivo">Inactivo</option>
+      </select>
+    </div>
+
+    <!-- Horario laboral -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Inicio laboral *</label>
+        <input type="time" class="form-control" formControlName="horarioInicioLaboral">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Fin laboral *</label>
+        <input type="time" class="form-control" formControlName="horarioFinLaboral">
+      </div>
+    </div>
+
+    <!-- Descanso -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Inicio descanso</label>
+        <input type="time" class="form-control" formControlName="horaInicioDescanso">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Fin descanso</label>
+        <input type="time" class="form-control" formControlName="horaFinDescanso">
+      </div>
+    </div>
+
+    <!-- Días laborables -->
+    <div class="mb-3">
+      <label class="form-label">Días laborables</label>
+      <select class="form-select" multiple formControlName="diasLaborables">
+        <option *ngFor="let dia of diasSemana" [value]="dia">{{ dia }}</option>
+      </select>
+    </div>
+
+    <!-- Botones -->
+    <button type="submit" class="btn btn-success" [disabled]="!barberoForm.valid">
+      {{ editMode ? 'Actualizar' : 'Guardar' }}
+    </button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="router.navigate(['/admin/barberos'])">
+      Cancelar
+    </button>
+  </form>
+</div>
