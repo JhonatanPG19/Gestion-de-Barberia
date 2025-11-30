@@ -1,0 +1,40 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Gestión de Servicios</h2>
+    <button class="btn btn-primary" routerLink="/admin/servicios/nuevo">
+      + Nuevo Servicio
+    </button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+      <thead class="table-light">
+        <tr>
+          <th>Nombre</th>
+          <th>Duración (min)</th>
+          <th>Precio ($)</th>
+          <th>Barberos</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of servicios">
+          <td>{{ s.nombre }}</td>
+          <td>{{ s.duracionMinutos }}</td>
+          <td>{{ s.precio | currency:'COP':'symbol':'1.0-0' }}</td>
+          <td>
+            <span *ngFor="let id of s.barberosIds" class="badge bg-secondary me-1">
+              {{ id }}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary me-1" 
+                    [routerLink]="['/admin/servicios', s.id, 'editar']">
+              Editar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
