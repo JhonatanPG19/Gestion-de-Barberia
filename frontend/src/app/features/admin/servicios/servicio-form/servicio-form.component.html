@@ -1,0 +1,56 @@
+<div class="container py-4">
+  <h2>{{ editMode ? 'Editar Servicio' : 'Nuevo Servicio' }}</h2>
+
+  <form [formGroup]="servicioForm" (ngSubmit)="onSubmit()">
+    <!-- Nombre -->
+    <div class="mb-3">
+      <label class="form-label">Nombre *</label>
+      <input type="text" class="form-control" formControlName="nombre">
+      <div *ngIf="servicioForm.get('nombre')?.invalid && servicioForm.get('nombre')?.touched" class="text-danger">
+        Nombre es obligatorio
+      </div>
+    </div>
+
+    <!-- Descripción -->
+    <div class="mb-3">
+      <label class="form-label">Descripción</label>
+      <textarea class="form-control" formControlName="descripcion"></textarea>
+    </div>
+
+    <!-- Duración -->
+    <div class="mb-3">
+      <label class="form-label">Duración (minutos) *</label>
+      <input type="number" class="form-control" formControlName="duracionMinutos">
+      <div *ngIf="servicioForm.get('duracionMinutos')?.invalid && servicioForm.get('duracionMinutos')?.touched" class="text-danger">
+        La duración mínima es 45 minutos
+      </div>
+    </div>
+
+    <!-- Precio -->
+    <div class="mb-3">
+      <label class="form-label">Precio ($)*</label>
+      <input type="number" step="0.01" class="form-control" formControlName="precio">
+      <div *ngIf="servicioForm.get('precio')?.invalid && servicioForm.get('precio')?.touched" class="text-danger">
+        Precio debe ser mayor a 0
+      </div>
+    </div>
+
+    <!-- Selector múltiple de barberos -->
+    <div class="mb-3">
+      <label class="form-label">Barberos que ofrecen este servicio</label>
+      <select class="form-select" multiple formControlName="barberosIds">
+        <option *ngFor="let b of barberos" [value]="b.id">
+          {{ b.nombre }} ({{ b.email }})
+        </option>
+      </select>
+    </div>
+
+    <!-- Botones -->
+    <button type="submit" class="btn btn-success" [disabled]="!servicioForm.valid">
+      {{ editMode ? 'Actualizar' : 'Guardar' }}
+    </button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="router.navigate(['/admin/servicios'])">
+      Cancelar
+    </button>
+  </form>
+</div>

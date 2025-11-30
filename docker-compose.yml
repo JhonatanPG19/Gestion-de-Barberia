@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # 1. Base de datos exclusiva para Keycloak (Infraestructura)
+  keycloak-db:
+    image: postgres:15
+    container_name: barberia_keycloak_db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    volumes:
+      - keycloak_data:/var/lib/postgresql/data
+    networks:
+      - barberia-net
+
+  # 2. Servidor de Identidad Keycloak
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: barberia_keycloak
+    command: start-dev # Modo desarrollo (más rápido, no usar en prod real)
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      - keycloak-db
+    networks:
+      - barberia-net
+
+  # 3. Base de datos para TU Microservicio de Usuarios (Tu Negocio)
+  usuarios-db:
+    image: postgres:15
+    container_name: barberia_usuarios_db
+    environment:
+      POSTGRES_DB: usuarios_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432" # Exponemos este puerto para que te conectes con DBeaver/PgAdmin
+    volumes:
+      - usuarios_data:/var/lib/postgresql/data
+    networks:
+      - barberia-net
+
+volumes:
+  keycloak_data:
+  usuarios_data:
+
+networks:
+  barberia-net:
+    driver: bridge
+
