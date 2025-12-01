@@ -1,0 +1,31 @@
+<div class="container py-4">
+    <h2>Mi Agenda</h2>
+    <p class="text-muted">Hoy: {{ fechaHoy }}</p>
+
+    <div class="alert alert-{{ estadoBarbero?.estado === 'ocupado' ? 'warning' : 'success' }}" *ngIf="estadoBarbero">
+        <strong>Estado actual:</strong>
+        <span [class.text-danger]="estadoBarbero.estado === 'ocupado'"
+            [class.text-success]="estadoBarbero.estado === 'disponible'">
+            {{ estadoBarbero.estado === 'ocupado' ? 'Ocupado' : 'Disponible' }}
+        </span>
+    </div>
+
+    <div class="card" *ngIf="estadoBarbero?.reservaActual">
+        <div class="card-body">
+            <h5 class="card-title">Servicio en curso</h5>
+            <p class="card-text">
+                <strong>Cliente:</strong> {{ estadoBarbero?.reservaActual?.cliente }}<br>
+                <strong>Servicio:</strong> {{ estadoBarbero?.reservaActual?.servicio }}<br>
+                <strong>Hora:</strong> {{ estadoBarbero?.reservaActual?.horaInicio }} - {{
+                estadoBarbero?.reservaActual?.horaFin }}
+            </p>
+            <button class="btn btn-sm btn-outline-primary me-1">Inicio</button>
+            <button class="btn btn-sm btn-outline-success">Fin</button>
+        </div>
+    </div>
+
+    <div class="alert alert-info"
+        *ngIf="estadoBarbero && !estadoBarbero.reservaActual && estadoBarbero.estado === 'disponible'">
+        No tienes reservas activas en este momento.
+    </div>
+</div>
