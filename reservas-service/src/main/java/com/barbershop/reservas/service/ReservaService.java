@@ -292,11 +292,14 @@ public class ReservaService {
             throw new IllegalArgumentException("Servicio no encontrado");
         }
         
+<<<<<<< HEAD
         // Validar que el barbero puede realizar el servicio
         /*if (!servicioFeignClient.barberoRealizaServicio(request.getBarberoId(), request.getServicioId())) {
             throw new IllegalArgumentException("El barbero no puede realizar este servicio");
         }*/
         
+=======
+>>>>>>> Adrian_branch
         // Validar que la fecha es futura
         if (request.getFechaHora().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("No se pueden crear reservas en el pasado");

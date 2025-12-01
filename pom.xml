@@ -16,6 +16,9 @@
     <modules>
         <module>api-gateway</module>
         <module>ms-usuarios</module>
+        <module>barbero-service</module>
+        <module>servicios-service</module>
+        <module>reservas-service</module>
         <!-- Agrega aquí los demás microservicios -->
     </modules>
 </project>

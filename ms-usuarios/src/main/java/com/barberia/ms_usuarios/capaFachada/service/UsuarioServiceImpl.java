@@ -1,15 +1,16 @@
 package com.barberia.ms_usuarios.capaFachada.service;
 
-import com.barberia.ms_usuarios.capaFachada.service.KeycloakService; // <-- Verifica esta ruta
-// O si KeycloakService está en otro paquete, impórtalo bien.
-import com.barberia.ms_usuarios.capaFachada.dto.RegistroUsuarioDTO;
-import com.barberia.ms_usuarios.dominio.Usuario;
-import com.barberia.ms_usuarios.capaAccesoADatos.repository.IUsuarioRepository;
-import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor; // <--- IMPORTANTE
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List; // <-- Verifica esta ruta
 import java.util.NoSuchElementException;
-import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.barberia.ms_usuarios.capaAccesoADatos.repository.IUsuarioRepository;
+import com.barberia.ms_usuarios.capaFachada.dto.RegistroUsuarioDTO; // <--- IMPORTANTE
+import com.barberia.ms_usuarios.dominio.Usuario;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -72,5 +73,10 @@ public class UsuarioServiceImpl implements IUsuarioService {
     public Usuario obtenerUsuarioPorId(Integer id)
     {
         return usuarioRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
+    }
+
+    @Override
+    public boolean existeUsuarioPorId(Integer id) {
+        return usuarioRepository.existsById(id);
     }
 }

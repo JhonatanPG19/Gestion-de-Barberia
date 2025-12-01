@@ -2,6 +2,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MsUsuariosApplication",
+            "request": "launch",
+            "mainClass": "com.barberia.ms_usuarios.MsUsuariosApplication",
+            "projectName": "ms-usuarios"
+        },
+        {
+            "type": "java",
+            "name": "ApiGatewayApplication",
+            "request": "launch",
+            "mainClass": "com.barberia.api_gateway.ApiGatewayApplication",
+            "projectName": "api-gateway"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-BarberoServiceApplication<barbero-service>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
