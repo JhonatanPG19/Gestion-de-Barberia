@@ -1,6 +1,7 @@
 package com.barberia.ms_usuarios.capaControlador;
 
 import com.barberia.ms_usuarios.capaFachada.dto.RegistroUsuarioDTO;
+import com.barberia.ms_usuarios.capaFachada.dto.UsuarioResponseDTO;
 import com.barberia.ms_usuarios.dominio.Usuario;
 import com.barberia.ms_usuarios.capaFachada.service.IUsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/usuarios")
 public class RegistroController {
-
 
     private final IUsuarioService usuarioService; // Inyectamos la Interfaz, no la implementación
 
@@ -50,7 +51,6 @@ public class RegistroController {
         }
     }
 
-
     @GetMapping("/perfil")
     public ResponseEntity<?> obtenerMiPerfil() {
         // 1. Obtener quién es el usuario autenticado desde el Token JWT
@@ -65,8 +65,6 @@ public class RegistroController {
         return ResponseEntity.ok(respuesta);
     }
 
-
-    // 2. Endpoint PROTEGIDO (Solo ADMIN, crea empleados/barberos)
     @PostMapping("/admin/crear-empleado")
     @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Usuario> registrarEmpleado(@RequestBody RegistroUsuarioDTO dto) {
@@ -80,6 +78,25 @@ public class RegistroController {
     public ResponseEntity<List<Usuario>> listarUsuarios() {
         List<Usuario> usuarios = usuarioService.listarUsuarios();
         return ResponseEntity.ok(usuarios);
+    }
+
+    // Endpoint para uso interno entre microservicios (Feign)
+    @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()") // <--- MANTENLA: Solo gente con token (o microservicios con token) pasan
+    public ResponseEntity<UsuarioResponseDTO> obtenerUsuarioPorId(@PathVariable Integer id) {
+
+        // Buscamos el usuario (Tu servicio ya maneja la excepción si no existe)
+        Usuario usuario = usuarioService.obtenerUsuarioPorId(id);
+
+        // Convertimos a DTO para NO enviar la contraseña ni datos sensibles internos
+        UsuarioResponseDTO respuesta = new UsuarioResponseDTO();
+        respuesta.setId(usuario.getId());
+        //respuesta.setNombre(usuario.getNombre());
+        //respuesta.setApellido(usuario.getApellido());
+        //respuesta.setCorreo(usuario.getCorreo());
+        //respuesta.setTelefono(usuario.getTelefono());
+
+        return ResponseEntity.ok(respuesta);
     }
 
 
