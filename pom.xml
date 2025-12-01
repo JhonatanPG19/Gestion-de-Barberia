@@ -19,6 +19,7 @@
         <module>barbero-service</module>
         <module>servicios-service</module>
         <module>reservas-service</module>
+        <module>notificacion-service</module>
         <!-- Agrega aquí los demás microservicios -->
     </modules>
 </project>

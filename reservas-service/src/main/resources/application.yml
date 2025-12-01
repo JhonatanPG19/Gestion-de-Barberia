@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/barbershop_reservas
     username: postgres
-    password: postgres
+    password: 123456
     driver-class-name: org.postgresql.Driver
   
   jpa:
@@ -24,11 +24,7 @@ spring:
     password: guest
 
 server:
-<<<<<<< HEAD
-  port: 8085
-=======
   port: 8084
->>>>>>> Adrian_branch
 
 # Configuración de RabbitMQ
 rabbitmq:
