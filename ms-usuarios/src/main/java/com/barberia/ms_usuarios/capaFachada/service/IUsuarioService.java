@@ -1,9 +1,9 @@
 package com.barberia.ms_usuarios.capaFachada.service;
 
-import com.barberia.ms_usuarios.dominio.Usuario;
-import com.barberia.ms_usuarios.capaFachada.dto.RegistroUsuarioDTO;
-
 import java.util.List;
+
+import com.barberia.ms_usuarios.capaFachada.dto.RegistroUsuarioDTO;
+import com.barberia.ms_usuarios.dominio.Usuario;
 
 
 public interface IUsuarioService {
@@ -16,4 +16,8 @@ public interface IUsuarioService {
 
     // Para listar (Admin)
     List<Usuario> listarUsuarios();
+
+    Usuario obtenerUsuarioPorId(Integer id);
+
+    boolean existeUsuarioPorId(Integer id);
 }

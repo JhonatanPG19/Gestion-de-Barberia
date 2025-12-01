@@ -1,0 +1,27 @@
+.reservas-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.hero {
+  text-align: center;
+  background: radial-gradient(circle at top, rgba(99, 102, 241, 0.15), transparent 70%);
+  padding: 2rem 1rem;
+  border-radius: 20px;
+}
+
+.hero h1 {
+  margin: 0.25rem 0 0.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.error {
+  color: #dc2626;
+}

@@ -1,6 +1,5 @@
-package com.barbershop.reservas.dto.external;
+package com.barberia.ms_usuarios.capaFachada.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClienteDto {
-    private Long id;
+public class UsuarioResponseDTO {
+
+    private Integer id;
     private String nombre;
     private String apellido;
-    @JsonProperty("correo")
-    private String email;
     private String telefono;
+    private String correo;
 }

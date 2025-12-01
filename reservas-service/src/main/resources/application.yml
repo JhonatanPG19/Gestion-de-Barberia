@@ -24,7 +24,7 @@ spring:
     password: guest
 
 server:
-  port: 8081
+  port: 8084
 
 # Configuración de RabbitMQ
 rabbitmq:
@@ -32,12 +32,12 @@ rabbitmq:
     notificaciones: notificaciones.exchange
   
   queue:
-    reserva-creada: notificaciones.reserva.creada
-    reserva-confirmada: notificaciones.reserva.confirmada
-    reserva-cancelada: notificaciones.reserva.cancelada
-    reserva-reprogramada: notificaciones.reserva.reprogramada
-    servicio-iniciado: notificaciones.servicio.iniciado
-    servicio-completado: notificaciones.servicio.completado
+    reserva-creada: reserva.creada.queue
+    reserva-confirmada: reserva.confirmada.queue
+    reserva-cancelada: reserva.cancelada.queue
+    reserva-reprogramada: reserva.reprogramada.queue
+    servicio-iniciado: servicio.iniciado.queue
+    servicio-completado: servicio.completado.queue
   
   routing-key:
     reserva-creada: reserva.creada
@@ -54,7 +54,7 @@ services:
   servicio:
     url: http://localhost:8083
   usuario:
-    url: http://localhost:8084
+    url: http://localhost:8081
 
 # Configuración de Actuator
 management:

@@ -1,8 +1,14 @@
 package co.edu.unicauca.barbero_service.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +37,54 @@ public class BarberoService {
     public Barbero findById(Integer id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Barbero no encontrado con ID: " + id));
+    }
+
+    public boolean estaDisponibleEnFechaHora(Integer id, LocalDate fecha, LocalTime hora) {
+        Barbero barbero = findById(id);
+
+        // 1. Verificar si el barbero está activo
+        if (barbero.getEstado() == null || !"activo".equalsIgnoreCase(barbero.getEstado().name())){
+            return false;
+        }
+
+        // 2. Verificar si es un dia laboral
+        Set<String> diasLaborales = Arrays.stream(barbero.getDiasLaborables().split(","))
+            .map(String::trim)
+            .map(nombre -> nombre.toUpperCase(Locale.ROOT))
+            .collect(Collectors.toSet());
+
+        String diaActual = fecha.getDayOfWeek()
+            .getDisplayName(TextStyle.FULL, Locale.of("es", "ES"))
+            .toUpperCase(Locale.ROOT);
+
+        if(!diasLaborales.contains(diaActual)){
+            return false;
+        }
+
+        // 3.Verificar horario laboral
+        if (hora.isBefore(barbero.getHorarioInicioLaboral()) ||
+            hora.isAfter(barbero.getHorarioFinLaboral())) {
+            return false;
+        }
+
+        // 4. Verificar horario de descanso
+        if (barbero.getHoraInicioDescanso() != null &&
+            barbero.getHoraFinDescanso() != null) {
+            if (!hora.isBefore(barbero.getHoraInicioDescanso()) &&
+                !hora.isAfter(barbero.getHoraFinDescanso())) {
+                return false; // Esta en descanso
+            }
+        }
+        return true;
+    }
+
+    public boolean existeBarbero(Integer id) {
+        try {
+            findById(id);
+            return true;
+        } catch (ResourceNotFoundException ex) {
+            return false;
+        }
     }
 
     @Transactional
@@ -91,4 +145,6 @@ public class BarberoService {
         barbero.setUpdatedAt(LocalDateTime.now());
         repository.save(barbero);
     }
+
+
 }
