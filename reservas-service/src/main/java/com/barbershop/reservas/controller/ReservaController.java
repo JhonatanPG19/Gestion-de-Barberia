@@ -4,6 +4,7 @@ import com.barbershop.reservas.dto.request.ActualizarReservaRequest;
 import com.barbershop.reservas.dto.request.CrearReservaRequest;
 import com.barbershop.reservas.dto.request.ReprogramarReservaRequest;
 import com.barbershop.reservas.dto.response.ReservaResponse;
+import com.barbershop.reservas.dto.response.EstadoBarberoResponse;
 import com.barbershop.reservas.service.ReservaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,6 +60,12 @@ public class ReservaController {
         
         List<ReservaResponse> reservas = reservaService.obtenerReservasPorBarbero(barberoId, fecha);
         return ResponseEntity.ok(reservas);
+    }
+
+    @GetMapping("/barbero/{barberoId}/estado")
+    @Operation(summary = "Consultar estado en tiempo real del barbero")
+    public ResponseEntity<EstadoBarberoResponse> obtenerEstadoEnTiempoReal(@PathVariable Long barberoId) {
+        return ResponseEntity.ok(reservaService.obtenerEstadoBarbero(barberoId));
     }
 
     @GetMapping("/dia/{fecha}")
