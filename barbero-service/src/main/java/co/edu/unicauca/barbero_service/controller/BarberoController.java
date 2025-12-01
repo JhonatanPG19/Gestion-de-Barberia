@@ -1,5 +1,7 @@
 package co.edu.unicauca.barbero_service.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +22,8 @@ import co.edu.unicauca.barbero_service.model.Barbero;
 import co.edu.unicauca.barbero_service.model.EstadoBarbero;
 import co.edu.unicauca.barbero_service.service.BarberoService;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/barbero")
@@ -74,4 +78,22 @@ public class BarberoController {
         service.actualizarEstado(id, nuevoEstado);
         return ResponseEntity.noContent().build();
     }
+
+    // Endpoint para validar disponibilidad de un barbero en una fecha especifica
+    @GetMapping("/{id}/disponibilidad")
+    public ResponseEntity<Map<String, Boolean>> consultarDispoibilidad(
+            @PathVariable Integer id,
+            @RequestParam LocalDate fecha,
+            @RequestParam LocalTime hora) {
+        boolean disponible = service.estaDisponibleEnFechaHora(id, fecha, hora);
+        return ResponseEntity.ok(Map.of("disponible", disponible));
+    }
+
+    // Endpoint pra validar si un barbero existe
+    @GetMapping("/existe/{id}")
+    public ResponseEntity<Map<String, Boolean>> existeBarbero(@PathVariable Integer id) {
+        boolean existe = service.existeBarbero(id);
+        return ResponseEntity.ok(Map.of("existe", existe));
+    }
+    
 }

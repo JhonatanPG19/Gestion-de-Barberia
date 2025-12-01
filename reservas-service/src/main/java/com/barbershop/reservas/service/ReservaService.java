@@ -293,9 +293,9 @@ public class ReservaService {
         }
         
         // Validar que el barbero puede realizar el servicio
-        if (!servicioFeignClient.barberoRealizaServicio(request.getBarberoId(), request.getServicioId())) {
+        /*if (!servicioFeignClient.barberoRealizaServicio(request.getBarberoId(), request.getServicioId())) {
             throw new IllegalArgumentException("El barbero no puede realizar este servicio");
-        }
+        }*/
         
         // Validar que la fecha es futura
         if (request.getFechaHora().isBefore(LocalDateTime.now())) {
