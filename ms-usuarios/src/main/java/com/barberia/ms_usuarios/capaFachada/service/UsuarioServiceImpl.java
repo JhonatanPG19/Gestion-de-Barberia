@@ -8,7 +8,7 @@ import com.barberia.ms_usuarios.capaAccesoADatos.repository.IUsuarioRepository;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor; // <--- IMPORTANTE
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.NoSuchElementException;
 import java.util.List;
 
 @Service
@@ -67,5 +67,10 @@ public class UsuarioServiceImpl implements IUsuarioService {
     public List<Usuario> listarUsuarios()
     {
         return usuarioRepository.findAll();
+    }
+
+    public Usuario obtenerUsuarioPorId(Integer id)
+    {
+        return usuarioRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
     }
 }
