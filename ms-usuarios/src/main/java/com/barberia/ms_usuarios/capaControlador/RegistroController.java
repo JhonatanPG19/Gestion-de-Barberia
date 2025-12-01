@@ -1,23 +1,27 @@
 package com.barberia.ms_usuarios.capaControlador;
 
-import com.barberia.ms_usuarios.capaFachada.dto.RegistroUsuarioDTO;
-import com.barberia.ms_usuarios.capaFachada.dto.UsuarioResponseDTO;
-import com.barberia.ms_usuarios.dominio.Usuario;
-import com.barberia.ms_usuarios.capaFachada.service.IUsuarioService;
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.barberia.ms_usuarios.capaFachada.dto.RegistroUsuarioDTO;
+import com.barberia.ms_usuarios.capaFachada.dto.UsuarioResponseDTO;
+import com.barberia.ms_usuarios.capaFachada.service.IUsuarioService;
+import com.barberia.ms_usuarios.dominio.Usuario;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -82,21 +86,24 @@ public class RegistroController {
 
     // Endpoint para uso interno entre microservicios (Feign)
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()") // <--- MANTENLA: Solo gente con token (o microservicios con token) pasan
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UsuarioResponseDTO> obtenerUsuarioPorId(@PathVariable Integer id) {
-
-        // Buscamos el usuario (Tu servicio ya maneja la excepción si no existe)
         Usuario usuario = usuarioService.obtenerUsuarioPorId(id);
 
-        // Convertimos a DTO para NO enviar la contraseña ni datos sensibles internos
-        UsuarioResponseDTO respuesta = new UsuarioResponseDTO();
-        respuesta.setId(usuario.getId());
-        //respuesta.setNombre(usuario.getNombre());
-        //respuesta.setApellido(usuario.getApellido());
-        //respuesta.setCorreo(usuario.getCorreo());
-        //respuesta.setTelefono(usuario.getTelefono());
+        UsuarioResponseDTO respuesta = UsuarioResponseDTO.builder()
+                .id(usuario.getId())
+                .nombre(usuario.getNombre())
+                .apellido(usuario.getApellido())
+                .correo(usuario.getCorreo())
+                .telefono(usuario.getTelefono())
+                .build();
 
         return ResponseEntity.ok(respuesta);
+    }
+
+    @GetMapping("/{id}/existe")
+    public ResponseEntity<Boolean> existeUsuario(@PathVariable Integer id) {
+        return ResponseEntity.ok(usuarioService.existeUsuarioPorId(id));
     }
 
 
