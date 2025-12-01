@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Collection;
 
 @Repository
 public interface ReservaRepository extends JpaRepository<ReservaEntity, Long> {
@@ -48,4 +49,20 @@ public interface ReservaRepository extends JpaRepository<ReservaEntity, Long> {
             @Param("barberoId") Long barberoId,
             @Param("inicio") LocalDateTime inicio,
             @Param("fin") LocalDateTime fin);
+
+    @Query("SELECT r FROM ReservaEntity r WHERE r.barberoId = :barberoId " +
+           "AND r.fechaHora <= :instante AND r.fechaHoraFin > :instante " +
+           "AND r.estado IN :estados ORDER BY r.fechaHora ASC")
+    List<ReservaEntity> findReservasEnCurso(
+            @Param("barberoId") Long barberoId,
+            @Param("instante") LocalDateTime instante,
+            @Param("estados") Collection<EstadoReserva> estados);
+
+    @Query("SELECT r FROM ReservaEntity r WHERE r.barberoId = :barberoId " +
+           "AND r.fechaHora >= :instante AND r.estado IN :estados " +
+           "ORDER BY r.fechaHora ASC")
+    List<ReservaEntity> findProximasReservas(
+            @Param("barberoId") Long barberoId,
+            @Param("instante") LocalDateTime instante,
+            @Param("estados") Collection<EstadoReserva> estados);
 }

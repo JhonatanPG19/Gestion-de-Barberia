@@ -2,6 +2,7 @@ package com.barbershop.reservas.service;
 
 import com.barbershop.reservas.dto.request.CrearReservaRequest;
 import com.barbershop.reservas.dto.request.ActualizarReservaRequest;
+import com.barbershop.reservas.dto.response.EstadoBarberoResponse;
 import com.barbershop.reservas.dto.response.ReservaResponse;
 import com.barbershop.reservas.entities.ReservaEntity;
 import com.barbershop.reservas.entities.enums.EstadoReserva;
@@ -11,8 +12,10 @@ import com.barbershop.reservas.service.client.ServicioFeignClient;
 import com.barbershop.reservas.repository.ReservaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,11 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.EnumSet;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
+@SuppressWarnings("null")
 public class ReservaService {
 
     private final ReservaRepository reservaRepository;
@@ -35,9 +40,13 @@ public class ReservaService {
     private final NotificacionService notificacionService;
 
     private static final int TIEMPO_BUFFER_MINUTOS = 10;
-    private static final int TOLERANCIA_RETRASO_MINUTOS = 10;
     private static final LocalTime HORA_APERTURA = LocalTime.of(8, 0);
     private static final LocalTime HORA_CIERRE = LocalTime.of(20, 0);
+    private static final EnumSet<EstadoReserva> ESTADOS_OCUPACION = EnumSet.of(
+            EstadoReserva.PENDIENTE,
+            EstadoReserva.CONFIRMADA,
+            EstadoReserva.EN_PROCESO
+    );
 
     public ReservaResponse crearReserva(CrearReservaRequest request) {
         log.info("Creando reserva para cliente: {}", request.getClienteId());
@@ -212,6 +221,42 @@ public class ReservaService {
                 .collect(Collectors.toList());
     }
 
+        @Transactional(readOnly = true)
+        public EstadoBarberoResponse obtenerEstadoBarbero(Long barberoId) {
+        if (!Boolean.TRUE.equals(barberoFeignClient.existeBarbero(barberoId))) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Barbero no encontrado");
+        }
+
+        LocalDateTime ahora = LocalDateTime.now();
+        var reservaActual = reservaRepository.findReservasEnCurso(barberoId, ahora, ESTADOS_OCUPACION)
+            .stream()
+            .findFirst();
+
+        if (reservaActual.isPresent()) {
+            var actual = reservaActual.get();
+            return EstadoBarberoResponse.builder()
+                .barberoId(barberoId)
+                .estado("OCUPADO")
+                .ocupado(true)
+                .reservaActualId(actual.getId())
+                .reservaActualInicio(actual.getFechaHora())
+                .reservaActualFin(actual.getFechaHoraFin())
+                .build();
+        }
+
+        var proxima = reservaRepository.findProximasReservas(barberoId, ahora, ESTADOS_OCUPACION)
+            .stream()
+            .findFirst();
+
+        return EstadoBarberoResponse.builder()
+            .barberoId(barberoId)
+            .estado("DISPONIBLE")
+            .ocupado(false)
+            .proximaReservaId(proxima.map(ReservaEntity::getId).orElse(null))
+            .proximaReservaInicio(proxima.map(ReservaEntity::getFechaHora).orElse(null))
+            .build();
+        }
+
     @Transactional(readOnly = true)
     public List<LocalDateTime> obtenerHorariosDisponibles(Long barberoId, Long servicioId, LocalDate fecha) {
         log.info("Obteniendo horarios disponibles para barbero: {} en fecha: {}", barberoId, fecha);
@@ -278,28 +323,33 @@ public class ReservaService {
 
     private void validarReserva(CrearReservaRequest request) {
         // Validar que el cliente existe
-        if (!clienteFeignClient.existeCliente(request.getClienteId())) {
+        if (!Boolean.TRUE.equals(clienteFeignClient.existeCliente(request.getClienteId()))) {
             throw new IllegalArgumentException("Cliente no encontrado");
         }
         
         // Validar que el barbero existe
-        if (!barberoFeignClient.existeBarbero(request.getBarberoId())) {
+        if (!Boolean.TRUE.equals(barberoFeignClient.existeBarbero(request.getBarberoId()))) {
             throw new IllegalArgumentException("Barbero no encontrado");
         }
         
         // Validar que el servicio existe
-        if (!servicioFeignClient.existeServicio(request.getServicioId())) {
+        if (!Boolean.TRUE.equals(servicioFeignClient.existeServicio(request.getServicioId()))) {
             throw new IllegalArgumentException("Servicio no encontrado");
         }
         
-<<<<<<< HEAD
-        // Validar que el barbero puede realizar el servicio
-        /*if (!servicioFeignClient.barberoRealizaServicio(request.getBarberoId(), request.getServicioId())) {
+        // Validar que el barbero está habilitado para realizar el servicio solicitado
+        if (!Boolean.TRUE.equals(servicioFeignClient.barberoPuedeRealizar(
+                request.getServicioId(),
+                request.getBarberoId()))) {
             throw new IllegalArgumentException("El barbero no puede realizar este servicio");
-        }*/
-        
-=======
->>>>>>> Adrian_branch
+        }
+
+        // Validar con el microservicio de barberos que el horario respeta disponibilidad laboral
+        if (!Boolean.TRUE.equals(barberoFeignClient.verificarDisponibilidad(
+                request.getBarberoId(),
+                request.getFechaHora().toString()))) {
+            throw new IllegalArgumentException("El barbero no está disponible según su horario laboral");
+        }
         // Validar que la fecha es futura
         if (request.getFechaHora().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("No se pueden crear reservas en el pasado");

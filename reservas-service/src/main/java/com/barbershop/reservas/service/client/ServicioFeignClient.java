@@ -15,4 +15,8 @@ public interface ServicioFeignClient {
     @GetMapping("/api/v1/servicios/{id}/existe")
     Boolean existeServicio(@PathVariable("id") Long id);
     
+    @GetMapping("/api/v1/servicios/{servicioId}/barberos/{barberoId}/habilitado")
+    Boolean barberoPuedeRealizar(
+            @PathVariable("servicioId") Long servicioId,
+            @PathVariable("barberoId") Long barberoId);
 }

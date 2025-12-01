@@ -88,4 +88,12 @@ public class ServicioService {
             repository.save(servicio);
         }
     }
+
+    public boolean barberoPuedeRealizarServicio(Integer servicioId, Integer barberoId) {
+        Servicio servicio = findById(servicioId);
+        if (servicio.getBarberosIds() == null) {
+            return false;
+        }
+        return servicio.getBarberosIds().contains(barberoId);
+    }
 }
