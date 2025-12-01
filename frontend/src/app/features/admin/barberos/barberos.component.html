@@ -23,17 +23,24 @@
           <td>{{ b.telefono }}</td>
           <td>{{ b.email }}</td>
           <td>
-            <span [class.text-success]="b.estado === 'activo'" 
-                  [class.text-danger]="b.estado === 'inactivo'">
+            <span [class.text-success]="b.estado === 'activo'" [class.text-danger]="b.estado === 'inactivo'">
               {{ b.estado === 'activo' ? 'Activo' : 'Inactivo' }}
             </span>
           </td>
+          <!-- src/app/features/admin/barberos/barberos.component.html -->
           <td>
+            <button *ngIf="b.estado === 'activo' && b.id" class="btn btn-sm btn-outline-danger me-1"
+              (click)="cambiarEstado(b.id, 'inactivo')">
+              Inactivar
+            </button>
+
+            <button *ngIf="b.estado === 'inactivo' && b.id" class="btn btn-sm btn-outline-success me-1"
+              (click)="cambiarEstado(b.id, 'activo')">
+              Activar
+            </button>
+
             <button class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/admin/barberos', b.id, 'editar']">
               Editar
-            </button>
-            <button class="btn btn-sm btn-outline-danger">
-              Inactivar
             </button>
           </td>
         </tr>

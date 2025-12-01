@@ -36,7 +36,7 @@ export class BarberoFormComponent implements OnInit {
       horarioFinLaboral: ['18:00', Validators.required],
       horaInicioDescanso: [''],
       horaFinDescanso: [''],
-      diasLaborables: [['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado']]
+      diasLaborables: [[]]
     });
   }
 
@@ -50,34 +50,71 @@ export class BarberoFormComponent implements OnInit {
   }
 
   cargarBarbero(id: number) {
-    this.barberiaService.getBarbero(id).subscribe(barbero => {
-      // Convertir diasLaborables string a array
-      const diasArray = barbero.diasLaborables.split(',');
-      this.barberoForm.patchValue({
-        ...barbero,
-        diasLaborables: diasArray
-      });
+    this.barberiaService.getBarbero(id).subscribe({
+      next: (barbero) => {
+        // Convertir string de la BD a array para el formulario
+        const diasArray = barbero.diasLaborables.split(',').filter(d => d.trim());
+        this.barberoForm.patchValue({
+          ...barbero,
+          diasLaborables: diasArray
+        });
+      },
+      error: (err) => {
+        console.error('Error al cargar barbero:', err);
+        alert('No se pudo cargar el barbero. Verifica la conexión con el backend.');
+      }
     });
   }
 
+  toggleDia(dia: string, checked: boolean) {
+    const current = this.barberoForm.get('diasLaborables')?.value || [];
+    const newDias = checked
+      ? [...current, dia]
+      : current.filter((d: string) => d !== dia);
+    this.barberoForm.patchValue({ diasLaborables: newDias });
+  }
+
+  // src/app/features/admin/barberos/barbero-form/barbero-form.component.ts
   onSubmit() {
     if (this.barberoForm.valid) {
-      const formValue = this.barberoForm.value;
-      const barberData: Barbero = {
-        ...formValue,
-        // Convertir array de días a string
-        diasLaborables: formValue.diasLaborables.join(',')
-      };
+      const formValue = { ...this.barberoForm.value };
+      formValue.diasLaborables = formValue.diasLaborables.join(',');
 
-      if (this.editMode && this.barberId) {
-        this.barberiaService.updateBarbero(this.barberId, barberData).subscribe(() => {
+      const save$ = this.editMode && this.barberId
+        ? this.barberiaService.updateBarbero(this.barberId, formValue)
+        : this.barberiaService.createBarbero(formValue);
+
+      save$.subscribe({
+        next: () => {
           this.router.navigate(['/admin/barberos']);
-        });
-      } else {
-        this.barberiaService.createBarbero(barberData).subscribe(() => {
-          this.router.navigate(['/admin/barberos']);
-        });
-      }
+        },
+        error: (err) => {
+          let mensaje = 'Error al guardar el barbero.';
+          //Detectar error de email duplicado
+          if (err.status === 400 || err.status === 500) {
+            mensaje = 'Ya existe un barbero con ese correo electrónico.';
+          }
+          console.error('Error:', err);
+          alert(mensaje);
+        }
+      });
+    } else {
+      alert('Por favor, complete todos los campos obligatorios.');
     }
   }
+
+  eliminarBarbero() {
+    if (confirm('¿Está seguro de eliminar PERMANENTEMENTE este barbero?\n¡Esta acción no se puede deshacer!')) {
+      this.barberiaService.eliminarFisico(this.barberId!).subscribe({
+        next: () => {
+          this.router.navigate(['/admin/barberos']);
+        },
+        error: (err) => {
+          console.error('Error al eliminar:', err);
+          alert('No se puede eliminar: el barbero tiene reservas asociadas.');
+        }
+      });
+    }
+  }
+
 }

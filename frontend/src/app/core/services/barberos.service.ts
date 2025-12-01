@@ -19,7 +19,7 @@ export interface Barbero {
 export class BarberosService {
   private apiUrl = 'http://localhost:8082/api/barbero';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getBarberos(): Observable<Barbero[]> {
     return this.http.get<Barbero[]>(this.apiUrl);
@@ -30,10 +30,15 @@ export class BarberosService {
   }
 
   createBarbero(barbero: Barbero): Observable<Barbero> {
-    return this.http.post<Barbero>(this.apiUrl, barbero);
+    return this.http.post<Barbero>(`${this.apiUrl}/crear`, barbero);
   }
 
-  updateBarbero(id: number, barbero: Barbero): Observable<Barbero> {
+  updateBarbero(id: number, barbero: Partial<Barbero>): Observable<Barbero> {
     return this.http.put<Barbero>(`${this.apiUrl}/${id}`, barbero);
   }
+
+  eliminarFisico(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/eliminar/${id}`);
+  }
+  
 }
