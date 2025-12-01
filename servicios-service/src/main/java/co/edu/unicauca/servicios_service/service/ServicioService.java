@@ -59,6 +59,15 @@ public class ServicioService {
         return servicio.getBarberosIds();
     }
 
+    public boolean existeServicio(Integer id) {
+        try {
+            findById(id);
+            return true;
+        } catch (ResourceNotFoundException e) {
+            return false;
+        }
+    }
+
     // Con este añade un nuevo barbero, pero se pierden los barberos anteriormente
     @Transactional
     public void asignarBarberos(Integer servicioId, List<Integer> barberosIds) {

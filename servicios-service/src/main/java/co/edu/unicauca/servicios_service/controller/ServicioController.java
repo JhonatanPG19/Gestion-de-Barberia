@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import co.edu.unicauca.servicios_service.model.Servicio;
 import co.edu.unicauca.servicios_service.service.ServicioService;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/servicios")
@@ -74,4 +76,11 @@ public class ServicioController {
         service.agregarBarberoAServicio(id, barberoId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/existe/{id}")
+    public ResponseEntity<Map<String, Boolean>> existeServicio (@PathVariable Integer id) {
+        boolean existe = service.existeServicio(id);
+        return ResponseEntity.ok(Map.of("existe", existe));
+    }
+    
 }

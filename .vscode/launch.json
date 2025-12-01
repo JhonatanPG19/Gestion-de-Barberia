@@ -8,7 +8,8 @@
             "mainClass": "co.edu.unicauca.barbero_service.BarberoServiceApplication",
             "projectName": "barbero-service",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote"
         },
         {
             "type": "java",
@@ -27,6 +28,36 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "co.edu.unicauca.notificacion_service.NotificacionServiceApplication",
             "projectName": "notificacion-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ApiGatewayApplication<api-gateway>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.barberia.api_gateway.ApiGatewayApplication",
+            "projectName": "api-gateway",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MsUsuariosApplication<ms-usuarios>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.barberia.ms_usuarios.MsUsuariosApplication",
+            "projectName": "ms-usuarios",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ReservasServiceApplication<reservas-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.barbershop.reservas.ReservasServiceApplication",
+            "projectName": "reservas-service",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
