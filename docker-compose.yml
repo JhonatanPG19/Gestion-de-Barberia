@@ -42,15 +42,36 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     ports:
-      - "5432:5432" # Exponemos este puerto para que te conectes con DBeaver/PgAdmin
+      - "5432:5432" # Puerto 5432 en host, 5432 en contenedor (evita conflicto con PostgreSQL local)
     volumes:
       - usuarios_data:/var/lib/postgresql/data
     networks:
       - barberia-net
 
+  # 4. RabbitMQ - Message Broker para notificaciones
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: barberia_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"   # Puerto AMQP para microservicios
+      - "15672:15672" # Puerto Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - barberia-net
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   keycloak_data:
   usuarios_data:
+  rabbitmq_data:
 
 networks:
   barberia-net:

@@ -29,6 +29,16 @@
             "projectName": "notificacion-service",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MsUsuariosApplication<ms-usuarios>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.barberia.ms_usuarios.MsUsuariosApplication",
+            "projectName": "ms-usuarios",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

@@ -1,5 +1,5 @@
 -- Si no tiene la base de datos, crearla con:
--- CREATE DATABASE barberoBD;
+--CREATE DATABASE barberoBD;
 
 -- Elimina la tabla si ya existe (para limpieza)
 DROP TABLE IF EXISTS public.barberos CASCADE;
