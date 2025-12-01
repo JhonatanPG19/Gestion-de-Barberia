@@ -29,11 +29,12 @@ public class SecurityConfig {
 
                 // Configurar reglas de acceso
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/usuarios/registro").permitAll()
-                        // Permite acceso libre a endpoints que empiecen con /public
-                        .requestMatchers("/api/v1/public/**").permitAll()
-                        // Todo lo demás requiere autenticación (Token válido)
-                        .anyRequest().authenticated()
+                    .requestMatchers("/api/v1/usuarios/registro").permitAll()
+                    .requestMatchers("/api/v1/usuarios/**").permitAll()
+                    // Permite acceso libre a endpoints que empiecen con /public
+                    .requestMatchers("/api/v1/public/**").permitAll()
+                    // Todo lo demás requiere autenticación (Token válido)
+                    .anyRequest().authenticated()
                 )
                 // Configurar validación de Token JWT (Oauth2 Resource Server)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->

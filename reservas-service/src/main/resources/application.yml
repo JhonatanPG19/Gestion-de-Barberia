@@ -24,7 +24,7 @@ spring:
     password: guest
 
 server:
-  port: 8081
+  port: 8084
 
 # Configuración de RabbitMQ
 rabbitmq:
@@ -54,7 +54,7 @@ services:
   servicio:
     url: http://localhost:8083
   usuario:
-    url: http://localhost:8084
+    url: http://localhost:8081
 
 # Configuración de Actuator
 management:

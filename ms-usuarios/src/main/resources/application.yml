@@ -1,5 +1,5 @@
 server:
-  port: 8081  # Importante: Puerto distinto a Keycloak
+  port: 8081 # Importante: Puerto distinto a Keycloak
 
 spring:
   application:
@@ -15,7 +15,7 @@ spring:
     show-sql: true
     # open-in-view: false # Descomenta esto para quitar la otra advertencia amarilla
     hibernate:
-      ddl-auto: update  # CAMBIO CLAVE: Esto fuerza a borrar y crear tablas al iniciar
+      ddl-auto: update # CAMBIO CLAVE: Esto fuerza a borrar y crear tablas al iniciar
     properties:
       # Borra la linea del dialecto, Hibernate 7 es inteligente y lo detecta solo
       hibernate:
@@ -29,12 +29,9 @@ spring:
           issuer-uri: http://localhost:8080/realms/BarberiaRealm
           jwk-set-uri: http://localhost:8080/realms/BarberiaRealm/protocol/openid-connect/certs
 
-
-
-
 # Configuracion personalizada para administrar Keycloak
 keycloak:
-  server-url:  http://localhost:8080
+  server-url: http://localhost:8080
   realm: BarberiaRealm
   admin-client-id: barberia-backend-client
-  admin-client-secret: 9CpYH1mcVNP8TvpDrndsPVRMq0gcR80x # Pegalo aqui!
+  admin-client-secret: CfWR97yuEzCoiKl2qWMPVezXrv6mUD03 # Pegalo aqui!
