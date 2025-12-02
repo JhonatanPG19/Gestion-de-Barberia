@@ -15,9 +15,9 @@ spring:
     show-sql: true
     # open-in-view: false # Descomenta esto para quitar la otra advertencia amarilla
     hibernate:
-      ddl-auto: update  # <--- CAMBIO CLAVE: Esto fuerza a borrar y crear tablas al iniciar
+      ddl-auto: update  # CAMBIO CLAVE: Esto fuerza a borrar y crear tablas al iniciar
     properties:
-      # Borra la línea del dialecto, Hibernate 7 es inteligente y lo detecta solo
+      # Borra la linea del dialecto, Hibernate 7 es inteligente y lo detecta solo
       hibernate:
         format_sql: true
 
@@ -25,16 +25,16 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          # Esta es la URL mágica para que Spring encuentre el JwtDecoder
+          # Esta es la URL magica para que Spring encuentre el JwtDecoder
           issuer-uri: http://localhost:8080/realms/BarberiaRealm
           jwk-set-uri: http://localhost:8080/realms/BarberiaRealm/protocol/openid-connect/certs
 
 
 
 
-# Configuración personalizada para administrar Keycloak
+# Configuracion personalizada para administrar Keycloak
 keycloak:
   server-url:  http://localhost:8080
   realm: BarberiaRealm
   admin-client-id: barberia-backend-client
-  admin-client-secret: 9CpYH1mcVNP8TvpDrndsPVRMq0gcR80x # ¡Pégalo aquí!
+  admin-client-secret: 9CpYH1mcVNP8TvpDrndsPVRMq0gcR80x # Pegalo aqui!

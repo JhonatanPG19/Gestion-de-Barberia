@@ -1,0 +1,91 @@
+<section class="list-card">
+  <header class="list-card__header">
+    <div>
+      <p class="eyebrow">Panel de reservas</p>
+      <h2>Agenda del barbero</h2>
+      <p class="helper">Filtra por estado y gestiona rápidamente cada cita.</p>
+    </div>
+    <div class="filters">
+      <button
+        type="button"
+        *ngFor="let filtro of filtros"
+        (click)="cambiarFiltro(filtro.value)"
+        [class.active]="estadoActual === filtro.value"
+      >
+        {{ filtro.label }}
+      </button>
+    </div>
+  </header>
+
+  <div class="stats">
+    <article>
+      <span>Total</span>
+      <strong>{{ resumen?.total ?? 0 }}</strong>
+    </article>
+    <article>
+      <span>Pendientes</span>
+      <strong>{{ resumen?.pendientes ?? 0 }}</strong>
+    </article>
+    <article>
+      <span>Confirmadas</span>
+      <strong>{{ resumen?.confirmadas ?? 0 }}</strong>
+    </article>
+    <article>
+      <span>Canceladas</span>
+      <strong>{{ resumen?.canceladas ?? 0 }}</strong>
+    </article>
+  </div>
+
+  <ng-container *ngIf="!loading; else loadingTpl">
+    <p class="empty" *ngIf="!reservas || reservas.length === 0">
+      No hay reservas para el filtro seleccionado.
+    </p>
+
+    <div class="reservas-grid" *ngIf="reservas && reservas.length > 0">
+      <article class="reserva" *ngFor="let reserva of reservas; trackBy: trackById">
+        <div class="reserva__header">
+          <div>
+            <h3>{{ reserva.cliente }}</h3>
+            <p>{{ reserva.servicio }}</p>
+          </div>
+          <span [class]="badgeClass(reserva.estado)">{{ reserva.estado | titlecase }}</span>
+        </div>
+
+        <dl>
+          <div>
+            <dt>Fecha</dt>
+            <dd>{{ reserva.fecha }} a las {{ reserva.hora }}</dd>
+          </div>
+          <div>
+            <dt>Teléfono</dt>
+            <dd>{{ reserva.telefono }}</dd>
+          </div>
+          <div *ngIf="reserva.notas">
+            <dt>Notas</dt>
+            <dd>{{ reserva.notas }}</dd>
+          </div>
+        </dl>
+
+        <div class="reserva__actions">
+          <label for="estado-{{ reserva.id }}">Estado</label>
+          <select
+            id="estado-{{ reserva.id }}"
+            [value]="reserva.estado"
+            (change)="onEstadoSelect(reserva.id, $event)"
+          >
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="CONFIRMADA">Confirmada</option>
+            <option value="CANCELADA">Cancelada</option>
+          </select>
+        </div>
+      </article>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingTpl>
+    <div class="loading">
+      <span class="spinner"></span>
+      <p>Cargando reservas...</p>
+    </div>
+  </ng-template>
+</section>

@@ -10,4 +10,5 @@ import co.edu.unicauca.barbero_service.model.Barbero;
 @Repository
 public interface BarberoRepository extends JpaRepository<Barbero, Integer> {
     List<Barbero> findByEstado(String estado);
+    boolean existsByEmail(String email);
 }

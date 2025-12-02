@@ -1,18 +1,18 @@
 package co.edu.unicauca.barbero_service.model;
 
-
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "barberos")
@@ -31,9 +31,9 @@ public class Barbero {
     @Email(message = "Formato de email inválido")
     private String email;
 
-    @NotBlank
-    @Pattern(regexp = "activo|inactivo", message = "El estado debe ser 'activo' o 'inactivo'")
-    private String estado = "activo";
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstadoBarbero estado = EstadoBarbero.activo;
 
     @Column(name = "horario_inicio_laboral")
     private LocalTime horarioInicioLaboral = LocalTime.of(8, 0);
@@ -58,39 +58,99 @@ public class Barbero {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     // Getters y Setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Integer getId() {
+        return id;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getTelefono() { return telefono; }
-    public void setTelefono(String telefono) { this.telefono = telefono; }
+    public String getNombre() {
+        return nombre;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public String getTelefono() {
+        return telefono;
+    }
 
-    public LocalTime getHorarioInicioLaboral() { return horarioInicioLaboral; }
-    public void setHorarioInicioLaboral(LocalTime horarioInicioLaboral) { this.horarioInicioLaboral = horarioInicioLaboral; }
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
 
-    public LocalTime getHorarioFinLaboral() { return horarioFinLaboral; }
-    public void setHorarioFinLaboral(LocalTime horarioFinLaboral) { this.horarioFinLaboral = horarioFinLaboral; }
+    public String getEmail() {
+        return email;
+    }
 
-    public LocalTime getHoraInicioDescanso() { return horaInicioDescanso; }
-    public void setHoraInicioDescanso(LocalTime horaInicioDescanso) { this.horaInicioDescanso = horaInicioDescanso; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public LocalTime getHoraFinDescanso() { return horaFinDescanso; }
-    public void setHoraFinDescanso(LocalTime horaFinDescanso) { this.horaFinDescanso = horaFinDescanso; }
+    public EstadoBarbero getEstado() {
+        return estado;
+    }
 
-    public String getDiasLaborables() { return diasLaborables; }
-    public void setDiasLaborables(String diasLaborables) { this.diasLaborables = diasLaborables; }
+    public void setEstado(EstadoBarbero estado) {
+        this.estado = estado;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalTime getHorarioInicioLaboral() {
+        return horarioInicioLaboral;
+    }
 
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public void setHorarioInicioLaboral(LocalTime horarioInicioLaboral) {
+        this.horarioInicioLaboral = horarioInicioLaboral;
+    }
+
+    public LocalTime getHorarioFinLaboral() {
+        return horarioFinLaboral;
+    }
+
+    public void setHorarioFinLaboral(LocalTime horarioFinLaboral) {
+        this.horarioFinLaboral = horarioFinLaboral;
+    }
+
+    public LocalTime getHoraInicioDescanso() {
+        return horaInicioDescanso;
+    }
+
+    public void setHoraInicioDescanso(LocalTime horaInicioDescanso) {
+        this.horaInicioDescanso = horaInicioDescanso;
+    }
+
+    public LocalTime getHoraFinDescanso() {
+        return horaFinDescanso;
+    }
+
+    public void setHoraFinDescanso(LocalTime horaFinDescanso) {
+        this.horaFinDescanso = horaFinDescanso;
+    }
+
+    public String getDiasLaborables() {
+        return diasLaborables;
+    }
+
+    public void setDiasLaborables(String diasLaborables) {
+        this.diasLaborables = diasLaborables;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
