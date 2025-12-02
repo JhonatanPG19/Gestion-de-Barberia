@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-
-
 @Component({
   selector: 'app-auth-callback',
   standalone: true,
@@ -49,3 +47,4 @@ export class AuthCallbackComponent implements OnInit {
     });
   }
 }
+
