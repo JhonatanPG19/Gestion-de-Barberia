@@ -16,7 +16,7 @@ export const routes: Routes = [
     { path: 'admin/barberos', component: BarberosComponent },
     { path: 'admin/barberos/nuevo', component: BarberoFormComponent },
     { path: 'admin/barberos/:id/editar', component: BarberoFormComponent },
-    { path: '', redirectTo: 'admin/barberos', pathMatch: 'full' },
+    { path: '', redirectTo: 'admin/login', pathMatch: 'full' },
     { path: 'admin/servicios', component: ServiciosComponent },
     { path: 'admin/servicios/nuevo', component: ServicioFormComponent },
     { path: 'admin/servicios/:id/editar', component: ServicioFormComponent },
