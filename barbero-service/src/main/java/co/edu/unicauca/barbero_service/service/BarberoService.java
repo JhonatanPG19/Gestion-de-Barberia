@@ -43,35 +43,35 @@ public class BarberoService {
         Barbero barbero = findById(id);
 
         // 1. Verificar si el barbero está activo
-        if (barbero.getEstado() == null || !"activo".equalsIgnoreCase(barbero.getEstado().name())){
+        if (barbero.getEstado() == null || !"activo".equalsIgnoreCase(barbero.getEstado().name())) {
             return false;
         }
 
         // 2. Verificar si es un dia laboral
         Set<String> diasLaborales = Arrays.stream(barbero.getDiasLaborables().split(","))
-            .map(String::trim)
-            .map(nombre -> nombre.toUpperCase(Locale.ROOT))
-            .collect(Collectors.toSet());
+                .map(String::trim)
+                .map(nombre -> nombre.toUpperCase(Locale.ROOT))
+                .collect(Collectors.toSet());
 
         String diaActual = fecha.getDayOfWeek()
-            .getDisplayName(TextStyle.FULL, Locale.of("es", "ES"))
-            .toUpperCase(Locale.ROOT);
+                .getDisplayName(TextStyle.FULL, Locale.of("es", "ES"))
+                .toUpperCase(Locale.ROOT);
 
-        if(!diasLaborales.contains(diaActual)){
+        if (!diasLaborales.contains(diaActual)) {
             return false;
         }
 
         // 3.Verificar horario laboral
         if (hora.isBefore(barbero.getHorarioInicioLaboral()) ||
-            hora.isAfter(barbero.getHorarioFinLaboral())) {
+                hora.isAfter(barbero.getHorarioFinLaboral())) {
             return false;
         }
 
         // 4. Verificar horario de descanso
         if (barbero.getHoraInicioDescanso() != null &&
-            barbero.getHoraFinDescanso() != null) {
+                barbero.getHoraFinDescanso() != null) {
             if (!hora.isBefore(barbero.getHoraInicioDescanso()) &&
-                !hora.isAfter(barbero.getHoraFinDescanso())) {
+                    !hora.isAfter(barbero.getHoraFinDescanso())) {
                 return false; // Esta en descanso
             }
         }
@@ -87,10 +87,31 @@ public class BarberoService {
         }
     }
 
+    // src/main/java/co/edu/unicauca/barbero_service/service/BarberoService.java
+
     @Transactional
-    public Barbero create(Barbero barbero) {
+    public void eliminarFisico(Integer id) {
+        repository.deleteById(id);
+    }
+
+    @Transactional
+    public Barbero crear(Barbero barbero) {
         barbero.setId(null);
         barbero.setCreatedAt(LocalDateTime.now());
+        return repository.save(barbero);
+    }
+
+    @Transactional
+    public Barbero create(Barbero barbero) {
+        // ✅ Validar que el email no exista
+        if (repository.existsByEmail(barbero.getEmail())) {
+            throw new IllegalArgumentException("Ya existe un barbero con ese email: " + barbero.getEmail());
+        }
+
+        barbero.setId(null);
+        barbero.setCreatedAt(LocalDateTime.now());
+        barbero.setEstado(EstadoBarbero.activo);
+
         return repository.save(barbero);
     }
 
@@ -145,6 +166,5 @@ public class BarberoService {
         barbero.setUpdatedAt(LocalDateTime.now());
         repository.save(barbero);
     }
-
 
 }

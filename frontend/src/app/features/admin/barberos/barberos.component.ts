@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 export class BarberosComponent implements OnInit {
   barberos: Barbero[] = [];
 
-  constructor(private barberiaService: BarberosService) {}
+  constructor(private barberiaService: BarberosService) { }
 
   ngOnInit() {
     this.cargarBarberos();
@@ -24,4 +24,33 @@ export class BarberosComponent implements OnInit {
       error => console.error('Error al cargar barberos:', error)
     );
   }
+
+  inactivarBarbero(id: number) {
+    if (confirm('¿Está seguro de inactivar este barbero?')) {
+      this.barberiaService.getBarbero(id).subscribe(barbero => {
+        // Cambiar estado a "inactivo"
+        const barberoInactivo = { ...barbero, estado: 'inactivo' };
+        this.barberiaService.updateBarbero(id, barberoInactivo).subscribe(() => {
+          this.cargarBarberos(); // Recargar la lista
+        });
+      });
+    }
+  }
+
+  // src/app/features/admin/barberos/barberos.component.ts
+  cambiarEstado(id: number, nuevoEstado: string) {
+    const confirmMsg = nuevoEstado === 'activo'
+      ? '¿Activar este barbero?'
+      : '¿Inactivar este barbero?';
+
+    if (confirm(confirmMsg)) {
+      this.barberiaService.getBarbero(id).subscribe(barbero => {
+        const barberoActualizado = { ...barbero, estado: nuevoEstado };
+        this.barberiaService.updateBarbero(id, barberoActualizado).subscribe(() => {
+          this.cargarBarberos(); // Recargar lista
+        });
+      });
+    }
+  }
+
 }
