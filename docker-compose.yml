@@ -32,6 +32,8 @@ services:
       - keycloak-db
     networks:
       - barberia-net
+    volumes:
+      - ./keycloak-themes:/opt/keycloak/themes
 
   # 3. Base de datos para TU Microservicio de Usuarios (Tu Negocio)
   usuarios-db:
