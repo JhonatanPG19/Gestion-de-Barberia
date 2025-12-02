@@ -17,12 +17,18 @@
       <textarea class="form-control" formControlName="descripcion"></textarea>
     </div>
 
-    <!-- Duración -->
+    <!-- Duración (≥45 minutos) -->
     <div class="mb-3">
       <label class="form-label">Duración (minutos) *</label>
       <input type="number" class="form-control" formControlName="duracionMinutos">
-      <div *ngIf="servicioForm.get('duracionMinutos')?.invalid && servicioForm.get('duracionMinutos')?.touched" class="text-danger">
-        La duración mínima es 45 minutos
+      <div *ngIf="servicioForm.get('duracionMinutos')?.invalid && servicioForm.get('duracionMinutos')?.touched"
+        class="text-danger mt-1">
+        <span *ngIf="servicioForm.get('duracionMinutos')?.errors?.['required']">
+          La duración es obligatoria.
+        </span>
+        <span *ngIf="servicioForm.get('duracionMinutos')?.errors?.['min']">
+          La duración mínima es 45 minutos.
+        </span>
       </div>
     </div>
 
@@ -30,19 +36,27 @@
     <div class="mb-3">
       <label class="form-label">Precio ($)*</label>
       <input type="number" step="0.01" class="form-control" formControlName="precio">
-      <div *ngIf="servicioForm.get('precio')?.invalid && servicioForm.get('precio')?.touched" class="text-danger">
-        Precio debe ser mayor a 0
+      <div *ngIf="servicioForm.get('precio')?.invalid && servicioForm.get('precio')?.touched" class="text-danger mt-1">
+        <span *ngIf="servicioForm.get('precio')?.errors?.['required']">
+          El precio es obligatorio.
+        </span>
+        <span *ngIf="servicioForm.get('precio')?.errors?.['min']">
+          El precio debe ser mayor a 0.
+        </span>
       </div>
     </div>
 
     <!-- Selector múltiple de barberos -->
     <div class="mb-3">
       <label class="form-label">Barberos que ofrecen este servicio</label>
-      <select class="form-select" multiple formControlName="barberosIds">
-        <option *ngFor="let b of barberos" [value]="b.id">
-          {{ b.nombre }} ({{ b.email }})
-        </option>
-      </select>
+      <div class="form-check" *ngFor="let barbero of barberos">
+        <input class="form-check-input" type="checkbox" [id]="'barbero-' + barbero.id"
+          [checked]="servicioForm.value.barberosIds?.includes(barbero.id)"
+          (change)="toggleBarbero(barbero.id!, $event)" />
+        <label class="form-check-label" [for]="'barbero-' + barbero.id">
+          {{ barbero.nombre }} ({{ barbero.email }})
+        </label>
+      </div>
     </div>
 
     <!-- Botones -->
