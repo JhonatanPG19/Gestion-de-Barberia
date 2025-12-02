@@ -14,15 +14,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import co.edu.unicauca.servicios_service.model.Servicio;
 import co.edu.unicauca.servicios_service.service.ServicioService;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
 @RequestMapping("/api/servicios")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ServicioController {
 
     @Autowired
@@ -35,6 +36,11 @@ public class ServicioController {
 
     @GetMapping
     public ResponseEntity<List<Servicio>> getAll() {
+        return ResponseEntity.ok(service.findAll());
+    }
+
+    @GetMapping("/todos")
+    public ResponseEntity<List<Servicio>> getAllServicios() {
         return ResponseEntity.ok(service.findAll());
     }
 

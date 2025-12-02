@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import co.edu.unicauca.barbero_service.dto.RegistrarBarberoDTO;
 import co.edu.unicauca.barbero_service.model.Barbero;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/barbero")
+@CrossOrigin(origins = "http://localhost:4200")
 public class BarberoController {
 
     @Autowired
@@ -40,6 +42,11 @@ public class BarberoController {
 
     @GetMapping
     public ResponseEntity<List<Barbero>> getAll() {
+        return ResponseEntity.ok(service.findAll());
+    }
+
+    @GetMapping("/todos")
+    public ResponseEntity<List<Barbero>> getAllBarberos() {
         return ResponseEntity.ok(service.findAll());
     }
 

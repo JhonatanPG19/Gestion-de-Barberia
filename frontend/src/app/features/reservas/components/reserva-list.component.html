@@ -73,9 +73,9 @@
             [value]="reserva.estado"
             (change)="onEstadoSelect(reserva.id, $event)"
           >
-            <option value="PENDIENTE">Pendiente</option>
-            <option value="CONFIRMADA">Confirmada</option>
-            <option value="CANCELADA">Cancelada</option>
+            <option *ngFor="let estado of todosLosEstados" [value]="estado.value">
+              {{ estado.label }}
+            </option>
           </select>
         </div>
       </article>

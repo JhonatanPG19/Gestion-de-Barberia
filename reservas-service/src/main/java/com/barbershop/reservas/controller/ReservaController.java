@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/reservas")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Reservas", description = "API para gestión de reservas y turnos")

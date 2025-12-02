@@ -31,7 +31,20 @@ export class ReservaListComponent {
     { label: 'Todas', value: 'todas' },
     { label: 'Pendientes', value: 'PENDIENTE' },
     { label: 'Confirmadas', value: 'CONFIRMADA' },
-    { label: 'Canceladas', value: 'CANCELADA' }
+    { label: 'En Proceso', value: 'EN_PROCESO' },
+    { label: 'Completadas', value: 'COMPLETADA' },
+    { label: 'Canceladas', value: 'CANCELADA' },
+    { label: 'No Asistió', value: 'NO_ASISTIO' }
+  ];
+
+  // Todos los estados disponibles para el select
+  readonly todosLosEstados: { label: string; value: ReservaEstado }[] = [
+    { label: 'Pendiente', value: 'PENDIENTE' },
+    { label: 'Confirmada', value: 'CONFIRMADA' },
+    { label: 'En Proceso', value: 'EN_PROCESO' },
+    { label: 'Completada', value: 'COMPLETADA' },
+    { label: 'Cancelada', value: 'CANCELADA' },
+    { label: 'No Asistió', value: 'NO_ASISTIO' }
   ];
 
   cambiarFiltro(valor: EstadoFiltro): void {
@@ -55,7 +68,10 @@ export class ReservaListComponent {
     const map: Record<ReservaEstado, string> = {
       PENDIENTE: 'badge pending',
       CONFIRMADA: 'badge confirmed',
-      CANCELADA: 'badge cancelled'
+      EN_PROCESO: 'badge in-process',
+      COMPLETADA: 'badge completed',
+      CANCELADA: 'badge cancelled',
+      NO_ASISTIO: 'badge no-show'
     };
     return map[estado];
   }

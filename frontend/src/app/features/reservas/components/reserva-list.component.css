@@ -146,9 +146,24 @@ dd {
   color: #15803d;
 }
 
+.badge.in-process {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge.completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
 .badge.cancelled {
   background: #fee2e2;
   color: #b91c1c;
+}
+
+.badge.no-show {
+  background: #f1f5f9;
+  color: #475569;
 }
 
 .empty {

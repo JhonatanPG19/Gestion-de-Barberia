@@ -1,4 +1,4 @@
-export type ReservaEstado = 'PENDIENTE' | 'CONFIRMADA' | 'CANCELADA';
+export type ReservaEstado = 'PENDIENTE' | 'CONFIRMADA' | 'EN_PROCESO' | 'COMPLETADA' | 'CANCELADA' | 'NO_ASISTIO';
 
 export interface Reserva {
   id: string;
