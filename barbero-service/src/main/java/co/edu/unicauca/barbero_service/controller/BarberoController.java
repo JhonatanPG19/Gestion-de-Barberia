@@ -26,7 +26,7 @@ import co.edu.unicauca.barbero_service.service.BarberoService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@CrossOrigin(origins = "http://localhost:4200")
+
 @RestController
 @RequestMapping("/api/barbero")
 @CrossOrigin(origins = "http://localhost:4200")

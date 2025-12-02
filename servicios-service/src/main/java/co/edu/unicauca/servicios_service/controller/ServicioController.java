@@ -21,7 +21,6 @@ import co.edu.unicauca.servicios_service.model.Servicio;
 import co.edu.unicauca.servicios_service.service.ServicioService;
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/servicios")
 @CrossOrigin(origins = "http://localhost:4200")

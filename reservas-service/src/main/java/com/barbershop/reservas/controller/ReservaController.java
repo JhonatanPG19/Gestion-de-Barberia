@@ -24,7 +24,6 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/v1/reservas")
-@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Reservas", description = "API para gestión de reservas y turnos")
