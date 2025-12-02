@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { ServiciosService, Servicio } from '../../../core/services/servicios.service';
 
 @Component({
@@ -12,11 +12,38 @@ import { ServiciosService, Servicio } from '../../../core/services/servicios.ser
 export class ServiciosComponent implements OnInit {
   servicios: Servicio[] = [];
 
-  constructor(private service: ServiciosService) {}
+
+  constructor(private serviciosService: ServiciosService) { }
 
   ngOnInit() {
-    this.service.getServicios().subscribe(data => {
-      this.servicios = data;
+    this.cargarServicios();
+  }
+
+
+  cargarServicios() {
+    this.serviciosService.getServicios().subscribe({
+      next: (data) => {
+        this.servicios = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar servicios:', err);
+        alert('No se pudieron cargar los servicios.');
+      }
     });
+  }
+
+  // ✅ Método para eliminar
+  eliminarServicio(id: number) {
+    if (confirm('¿Eliminar PERMANENTEMENTE este servicio?')) {
+      this.serviciosService.eliminarServicio(id).subscribe({
+        next: () => {
+          this.cargarServicios();
+        },
+        error: (err) => {
+          console.error('Error al eliminar:', err);
+          alert('Error al eliminar el servicio.');
+        }
+      });
+    }
   }
 }

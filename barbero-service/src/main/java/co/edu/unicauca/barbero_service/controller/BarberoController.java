@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,9 +35,15 @@ public class BarberoController {
     @Autowired
     private BarberoService service;
 
+    @PostMapping("/create")
+    public ResponseEntity<Barbero> crear(@Valid @RequestBody Barbero barbero) {
+        Barbero saved = service.create(barbero);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
     @PostMapping("/crear")
     public ResponseEntity<Barbero> create(@Valid @RequestBody Barbero barbero) {
-        Barbero saved = service.create(barbero);
+        Barbero saved = service.create(barbero); // ✅ Ahora incluye validación
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
@@ -81,7 +88,7 @@ public class BarberoController {
     @PutMapping("/{id}/estado")
     public ResponseEntity<Void> actualizarEstado(@PathVariable Integer id, @RequestBody Map<String, String> body) {
         String nuevoEstadoStr = body.get("estado");
-        EstadoBarbero nuevoEstado = EstadoBarbero.valueOf(nuevoEstadoStr.toLowerCase());                                                                          // mayúsculas
+        EstadoBarbero nuevoEstado = EstadoBarbero.valueOf(nuevoEstadoStr.toLowerCase()); // mayúsculas
         service.actualizarEstado(id, nuevoEstado);
         return ResponseEntity.noContent().build();
     }
@@ -102,5 +109,11 @@ public class BarberoController {
         boolean existe = service.existeBarbero(id);
         return ResponseEntity.ok(Map.of("existe", existe));
     }
-    
+
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<Void> eliminarFisico(@PathVariable Integer id) {
+        service.eliminarFisico(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

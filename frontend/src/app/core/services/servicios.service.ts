@@ -14,9 +14,10 @@ export interface Servicio {
 
 @Injectable({ providedIn: 'root' })
 export class ServiciosService {
+  [x: string]: any;
   private apiUrl = 'http://localhost:8083/api/servicios';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getServicios(): Observable<Servicio[]> {
     return this.http.get<Servicio[]>(this.apiUrl);
@@ -34,5 +35,8 @@ export class ServiciosService {
     return this.http.put<Servicio>(`${this.apiUrl}/${id}`, servicio);
   }
 
-  // Para obtener la lista de barberos (se usara el servicio de barberos)
+  eliminarServicio(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
 }

@@ -46,12 +46,16 @@ public class ServicioService {
         return repository.save(existing);
     }
 
-    @Transactional
+    /*@Transactional
     public void delete(Integer id) {
         Servicio existing = findById(id);
         existing.setActivo(false);
         existing.setUpdatedAt(LocalDateTime.now());
         repository.save(existing);
+    }*/
+
+    public void delete(Integer id) {
+        repository.deleteById(id);
     }
 
     public List<Integer> obtenerBarberosDeServicio(Integer servicioId) {

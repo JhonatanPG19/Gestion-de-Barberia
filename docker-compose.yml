@@ -32,6 +32,8 @@ services:
       - keycloak-db
     networks:
       - barberia-net
+    volumes:
+      - ./keycloak-themes:/opt/keycloak/themes
 
   # 3. Base de datos para TU Microservicio de Usuarios (Tu Negocio)
   usuarios-db:
@@ -40,7 +42,8 @@ services:
     environment:
       POSTGRES_DB: usuarios_db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: md5
     ports:
       - "5432:5432" # Exponemos este puerto para que te conectes con DBeaver/PgAdmin
     volumes:

@@ -28,7 +28,7 @@ export class ServicioFormComponent implements OnInit {
       nombre: ['', Validators.required],
       descripcion: [''],
       duracionMinutos: [45, [Validators.required, Validators.min(45)]],
-      precio: [0, [Validators.required, Validators.min(1)]],
+      precio: [0, [Validators.required, Validators.min(0.01)]],
       barberosIds: [[]] // Array de IDs de barberos seleccionados
     });
   }
@@ -55,7 +55,8 @@ export class ServicioFormComponent implements OnInit {
 
   onSubmit() {
     if (this.servicioForm.valid) {
-      const servicioData: Servicio = this.servicioForm.value;
+      //const servicioData: Servicio = this.servicioForm.value;
+      const servicioData = this.servicioForm.value;
 
       if (this.editMode && this.servicioId) {
         this.serviciosService.updateServicio(this.servicioId, servicioData).subscribe(() => {
@@ -68,4 +69,15 @@ export class ServicioFormComponent implements OnInit {
       }
     }
   }
+
+  toggleBarbero(barberoId: number, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const current = this.servicioForm.get('barberosIds')?.value || [];
+    const updated = input.checked
+      ? [...current, barberoId]
+      : current.filter((id: number) => id !== barberoId);
+    this.servicioForm.patchValue({ barberosIds: updated });
+  }
+
+
 }

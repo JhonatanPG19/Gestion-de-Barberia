@@ -28,9 +28,11 @@
             </span>
           </td>
           <td>
-            <button class="btn btn-sm btn-outline-primary me-1" 
-                    [routerLink]="['/admin/servicios', s.id, 'editar']">
+            <button class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/admin/servicios', s.id, 'editar']">
               Editar
+            </button>
+            <button class="btn btn-sm btn-outline-danger" *ngIf="s.id !== undefined" (click)="eliminarServicio(s.id)">
+              Eliminar
             </button>
           </td>
         </tr>
