@@ -2,6 +2,10 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/api-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/barbero-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ms-usuarios/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/notificacion-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/reservas-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/servicios-service/src/main/java" charset="UTF-8" />
   </component>
 </project>
