@@ -11,12 +11,12 @@ WORKDIR /app
 COPY --from=build /app/target/notificacion-service-0.0.1-SNAPSHOT.jar app.jar
 
 # Variables de entorno por defecto (se pueden sobrescribir)
-ENV SPRING_PROFILES_ACTIVE=prod
+ENV SPRING_PROFILES_ACTIVE=docker
 ENV RABBITMQ_HOST=rabbitmq
-ENV POSTGRES_HOST=postgres
+ENV POSTGRES_HOST=notificacion-db
 ENV POSTGRES_DB=notificaciondb
 ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=123456
 
-EXPOSE 8083
+EXPOSE 8085
 ENTRYPOINT ["java", "-jar", "app.jar"]

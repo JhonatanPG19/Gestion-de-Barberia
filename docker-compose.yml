@@ -68,10 +68,26 @@ services:
       timeout: 5s
       retries: 5
 
+  # 5. Base de datos para Notificaciones
+  notificacion-db:
+    image: postgres:15
+    container_name: barberia_notificacion_db
+    environment:
+      POSTGRES_DB: notificaciondb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5434:5432" # Puerto diferente para evitar conflictos
+    volumes:
+      - notificacion_data:/var/lib/postgresql/data
+    networks:
+      - barberia-net
+
 volumes:
   keycloak_data:
   usuarios_data:
   rabbitmq_data:
+  notificacion_data:
 
 networks:
   barberia-net:
