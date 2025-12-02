@@ -4,6 +4,10 @@ import { BarberoFormComponent } from './features/admin/barberos/barbero-form/bar
 import { ServiciosComponent } from './features/admin/servicios/servicios.component';
 import { ServicioFormComponent } from './features/admin/servicios/servicio-form/servicio-form.component';
 import { ReservasPageComponent } from './features/reservas/reservas-page.component';
+import { LoginComponent } from './auth/login/login.component';
+import { AuthCallbackComponent } from './auth/auth-callback/auth-callback.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { AgendaBarberoComponent } from './features/barbero/agenda/agenda-barbero.component';
 
 export const routes: Routes = [
     { path: 'admin/login', component: LoginComponent },
