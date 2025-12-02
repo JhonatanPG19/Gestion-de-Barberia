@@ -8,7 +8,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/usuarios_db
     username: postgres
-    password: 123456
+    password: password
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -34,4 +34,4 @@ keycloak:
   server-url: http://localhost:8080
   realm: BarberiaRealm
   admin-client-id: barberia-backend-client
-  admin-client-secret: CfWR97yuEzCoiKl2qWMPVezXrv6mUD03 # Pegalo aqui!
+  admin-client-secret: 9CpYH1mcVNP8TvpDrndsPVRMq0gcR80x # Pegalo aqui!
