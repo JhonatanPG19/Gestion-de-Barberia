@@ -1,6 +1,6 @@
 # Ignorar carpetas de compilación de Maven y Java
 target/
-
+*/target/
 # Ignorar node_modules (por Angular u otros frontends)
 node_modules/
 
