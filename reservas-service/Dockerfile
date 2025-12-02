@@ -17,8 +17,11 @@ WORKDIR /app
 # Copiar el JAR desde la etapa de construcción
 COPY --from=build /app/target/*.jar app.jar
 
+# Variables de entorno
+ENV SPRING_PROFILES_ACTIVE=docker
+
 # Exponer el puerto
-EXPOSE 8081
+EXPOSE 8084
 
 # Comando de inicio
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -1,0 +1,15 @@
+spring:
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+
+# URLs de otros microservicios en Docker
+services:
+  barbero:
+    url: http://barbero-service:8082
+  servicio:
+    url: http://servicios-service:8083
+  usuario:
+    url: http://ms-usuarios:8081
