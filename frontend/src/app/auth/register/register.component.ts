@@ -1,4 +1,3 @@
-// src/app/auth/register/register.component.ts
 import { Component } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -64,7 +63,7 @@ export class RegisterComponent {
       telefono: this.f.telefono.value,
       correo:   this.f.correo.value,
       password: this.f.password.value,
-      rol: 'CLIENTE'
+      rol: 'cliente'
     };
 
     this.usuarioService.registrarCliente(dto).subscribe({
