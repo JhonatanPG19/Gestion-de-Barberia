@@ -23,6 +23,12 @@
         <module name="ms-usuarios" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="barbero-service" target="21" />
+      <module name="notificacion-service" target="21" />
+      <module name="reservas-service" target="17" />
+      <module name="servicios-service" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

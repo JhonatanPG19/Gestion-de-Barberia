@@ -38,7 +38,7 @@
 
         <div class="barberia-register-link">
             ¿No tienes cuenta?
-            <a href="${url.registrationUrl}">Regístrate aquí</a>
+            <a href="http://localhost:4200/register">Regístrate aquí</a>
         </div>
     </form>
 </div>
