@@ -73,4 +73,10 @@ public class UsuarioServiceImpl implements IUsuarioService {
     {
         return usuarioRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
     }
+
+    @Override
+    public Usuario obtenerPorUsername(String username) {
+        return usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
 }

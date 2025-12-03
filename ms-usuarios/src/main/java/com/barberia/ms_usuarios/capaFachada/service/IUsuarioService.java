@@ -18,4 +18,6 @@ public interface IUsuarioService {
     List<Usuario> listarUsuarios();
 
     Usuario obtenerUsuarioPorId(Integer id);
+
+    Usuario obtenerPorUsername(String username);
 }

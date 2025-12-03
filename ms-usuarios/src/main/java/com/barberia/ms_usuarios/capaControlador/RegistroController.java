@@ -99,5 +99,24 @@ public class RegistroController {
         return ResponseEntity.ok(respuesta);
     }
 
+    // Endpoint para que otros micros (o el front) sepan mi ID local
+    @GetMapping("/me")
+    public ResponseEntity<?> obtenerMiInfo() {
+        // 1. Sacamos el usuario del Token (SecurityContext)
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String usernameKeycloak = auth.getName(); // Esto devuelve el "preferred_username" gracias a tu convertidor
+
+        // 2. Buscamos en la BD local
+        Usuario usuario = usuarioService.obtenerPorUsername(usernameKeycloak);
+
+        // 3. Devolvemos solo lo necesario (ID y Rol, por ejemplo)
+        Map<String, Object> respuesta = new HashMap<>();
+        respuesta.put("id", usuario.getId());
+        respuesta.put("username", usuario.getUsername());
+        respuesta.put("rol", usuario.getRol());
+
+        return ResponseEntity.ok(respuesta);
+    }
+
 
 }
