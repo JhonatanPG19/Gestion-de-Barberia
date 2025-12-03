@@ -10,9 +10,11 @@
           id="username" 
           type="text" 
           formControlName="username"
-          placeholder="Mínimo 8 caracteres" />
+          placeholder="Mínimo 8 caracteres"
+          [class.is-invalid]="f.username.touched && f.username.invalid"
+          [class.is-valid]="f.username.touched && f.username.valid" />
         <div class="error" *ngIf="getErrorMessage('username')">
-          {{ getErrorMessage('username') }}
+          ⚠️ {{ getErrorMessage('username') }}
         </div>
       </div>
 
@@ -23,9 +25,11 @@
           id="nombre" 
           type="text" 
           formControlName="nombre"
-          placeholder="Solo letras, mínimo 3" />
+          placeholder="Solo letras, mínimo 3"
+          [class.is-invalid]="f.nombre.touched && f.nombre.invalid"
+          [class.is-valid]="f.nombre.touched && f.nombre.valid" />
         <div class="error" *ngIf="getErrorMessage('nombre')">
-          {{ getErrorMessage('nombre') }}
+          ⚠️ {{ getErrorMessage('nombre') }}
         </div>
       </div>
 
@@ -36,9 +40,11 @@
           id="apellido" 
           type="text" 
           formControlName="apellido"
-          placeholder="Solo letras, mínimo 3" />
+          placeholder="Solo letras, mínimo 3"
+          [class.is-invalid]="f.apellido.touched && f.apellido.invalid"
+          [class.is-valid]="f.apellido.touched && f.apellido.valid" />
         <div class="error" *ngIf="getErrorMessage('apellido')">
-          {{ getErrorMessage('apellido') }}
+          ⚠️ {{ getErrorMessage('apellido') }}
         </div>
       </div>
 
@@ -50,9 +56,11 @@
           type="text" 
           formControlName="telefono"
           placeholder="Ej: 3106376873"
-          maxlength="10" />
+          maxlength="10"
+          [class.is-invalid]="f.telefono.touched && f.telefono.invalid"
+          [class.is-valid]="f.telefono.touched && f.telefono.valid" />
         <div class="error" *ngIf="getErrorMessage('telefono')">
-          {{ getErrorMessage('telefono') }}
+          ⚠️ {{ getErrorMessage('telefono') }}
         </div>
       </div>
 
@@ -63,9 +71,11 @@
           id="correo" 
           type="email" 
           formControlName="correo"
-          placeholder="ejemplo@correo.com" />
+          placeholder="ejemplo@correo.com"
+          [class.is-invalid]="f.correo.touched && f.correo.invalid"
+          [class.is-valid]="f.correo.touched && f.correo.valid" />
         <div class="error" *ngIf="getErrorMessage('correo')">
-          {{ getErrorMessage('correo') }}
+          ⚠️ {{ getErrorMessage('correo') }}
         </div>
       </div>
 
@@ -76,9 +86,11 @@
           id="password" 
           type="password" 
           formControlName="password"
-          placeholder="Mínimo 8 caracteres" />
+          placeholder="Mínimo 8 caracteres"
+          [class.is-invalid]="f.password.touched && f.password.invalid"
+          [class.is-valid]="f.password.touched && f.password.valid" />
         <div class="error" *ngIf="getErrorMessage('password')">
-          {{ getErrorMessage('password') }}
+          ⚠️ {{ getErrorMessage('password') }}
         </div>
       </div>
 

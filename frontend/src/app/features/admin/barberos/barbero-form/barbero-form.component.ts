@@ -41,8 +41,8 @@ export class BarberoFormComponent implements OnInit {
   ) {
     this.barberoForm = this.fb.group({
       userId: ['', Validators.required],
-      nombre: ['', Validators.required],
-      telefono: ['', Validators.required],
+      nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
       estado: ['activo', Validators.required],
       horarioInicioLaboral: ['08:00', Validators.required],
