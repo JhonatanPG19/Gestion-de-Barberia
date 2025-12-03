@@ -1,85 +1,135 @@
-/* src/app/auth/register/register.component.css */
 .register-container {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #f4f6f9;
+  padding: 1rem;
 }
 
 .register-card {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+  padding: 2.5rem;
   width: 100%;
-  max-width: 500px;
+  max-width: 480px;
 }
 
 .register-card h2 {
+  font-size: 1.75rem;
+  margin: 0 0 1.5rem;
+  color: #111827;
   text-align: center;
-  margin-bottom: 1.5rem;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
 }
 
 .form-group input {
   width: 100%;
-  padding: 0.6rem;
-  border-radius: 4px;
-  border: 1px solid #ddd;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.35);
+}
+
+.form-group input.ng-touched.ng-invalid {
+  border-color: #ef4444;
 }
 
 .error {
-  color: #dc3545;
-  font-size: 0.85rem;
-  margin-top: 0.2rem;
+  color: #dc2626;
+  font-size: 0.8rem;
+  margin-top: 0.35rem;
+  display: block;
+  font-weight: 500;
 }
 
 .alert {
-  padding: 0.6rem;
-  border-radius: 4px;
-  margin-bottom: 0.8rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
   font-size: 0.9rem;
 }
 
 .error-alert {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
 }
 
 .success-alert {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background-color: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
 }
 
-button {
+button[type="submit"] {
   width: 100%;
   padding: 0.75rem;
+  border-radius: 6px;
   border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: #fff;
+  background-color: #111827;
+  color: white;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.2s, opacity 0.2s;
 }
 
-button:disabled {
-  background-color: #6c757d;
+button[type="submit"]:hover:not(:disabled) {
+  background-color: #020617;
+}
+
+button[type="submit"]:disabled {
+  background-color: #9ca3af;
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .login-link {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   text-align: center;
   font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.login-link a {
+  color: #2563eb;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 500;
+  margin-left: 0.25rem;
+}
+
+.login-link a:hover {
+  color: #1d4ed8;
+}
+
+@media (max-width: 640px) {
+  .register-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .register-card h2 {
+    font-size: 1.5rem;
+  }
 }

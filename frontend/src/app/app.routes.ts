@@ -1,4 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 import { BarberosComponent } from './features/admin/barberos/barberos.component';
 import { BarberoFormComponent } from './features/admin/barberos/barbero-form/barbero-form.component';
 import { ServiciosComponent } from './features/admin/servicios/servicios.component';
