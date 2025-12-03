@@ -1,57 +1,88 @@
-<!-- src/app/auth/register/register.component.html -->
 <div class="register-container">
   <div class="register-card">
     <h2>Registro de cliente</h2>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Username -->
       <div class="form-group">
         <label for="username">Nombre de usuario</label>
-        <input id="username" type="text" formControlName="username" />
-        <div class="error" *ngIf="f.username.touched && f.username.invalid">
-          El nombre de usuario es obligatorio.
+        <input 
+          id="username" 
+          type="text" 
+          formControlName="username"
+          placeholder="Mínimo 8 caracteres" />
+        <div class="error" *ngIf="getErrorMessage('username')">
+          {{ getErrorMessage('username') }}
         </div>
       </div>
 
+      <!-- Nombre -->
       <div class="form-group">
         <label for="nombre">Nombre</label>
-        <input id="nombre" type="text" formControlName="nombre" />
-        <div class="error" *ngIf="f.nombre.touched && f.nombre.invalid">
-          El nombre es obligatorio.
+        <input 
+          id="nombre" 
+          type="text" 
+          formControlName="nombre"
+          placeholder="Solo letras, mínimo 3" />
+        <div class="error" *ngIf="getErrorMessage('nombre')">
+          {{ getErrorMessage('nombre') }}
         </div>
       </div>
 
+      <!-- Apellido -->
       <div class="form-group">
         <label for="apellido">Apellido</label>
-        <input id="apellido" type="text" formControlName="apellido" />
-        <div class="error" *ngIf="f.apellido.touched && f.apellido.invalid">
-          El apellido es obligatorio.
+        <input 
+          id="apellido" 
+          type="text" 
+          formControlName="apellido"
+          placeholder="Solo letras, mínimo 3" />
+        <div class="error" *ngIf="getErrorMessage('apellido')">
+          {{ getErrorMessage('apellido') }}
         </div>
       </div>
 
+      <!-- Teléfono -->
       <div class="form-group">
         <label for="telefono">Teléfono</label>
-        <input id="telefono" type="text" formControlName="telefono" />
-        <div class="error" *ngIf="f.telefono.touched && f.telefono.invalid">
-          El teléfono es obligatorio.
+        <input 
+          id="telefono" 
+          type="text" 
+          formControlName="telefono"
+          placeholder="Ej: 3106376873"
+          maxlength="10" />
+        <div class="error" *ngIf="getErrorMessage('telefono')">
+          {{ getErrorMessage('telefono') }}
         </div>
       </div>
 
+      <!-- Correo -->
       <div class="form-group">
         <label for="correo">Correo electrónico</label>
-        <input id="correo" type="email" formControlName="correo" />
-        <div class="error" *ngIf="f.correo.touched && f.correo.invalid">
-          Ingresa un correo válido.
+        <input 
+          id="correo" 
+          type="email" 
+          formControlName="correo"
+          placeholder="ejemplo@correo.com" />
+        <div class="error" *ngIf="getErrorMessage('correo')">
+          {{ getErrorMessage('correo') }}
         </div>
       </div>
 
+      <!-- Contraseña -->
       <div class="form-group">
         <label for="password">Contraseña</label>
-        <input id="password" type="password" formControlName="password" />
-        <div class="error" *ngIf="f.password.touched && f.password.invalid">
-          La contraseña es obligatoria y debe tener al menos 6 caracteres.
+        <input 
+          id="password" 
+          type="password" 
+          formControlName="password"
+          placeholder="Mínimo 8 caracteres" />
+        <div class="error" *ngIf="getErrorMessage('password')">
+          {{ getErrorMessage('password') }}
         </div>
       </div>
 
+      <!-- Mensajes de estado -->
       <div *ngIf="errorMessage" class="alert error-alert">
         {{ errorMessage }}
       </div>
@@ -59,6 +90,7 @@
         {{ successMessage }}
       </div>
 
+      <!-- Botón de registro (deshabilitado si el form es inválido) -->
       <button type="submit" [disabled]="loading || registerForm.invalid">
         <span *ngIf="loading">Registrando...</span>
         <span *ngIf="!loading">Registrarse</span>

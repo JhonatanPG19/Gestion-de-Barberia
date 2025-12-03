@@ -1,13 +1,22 @@
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 import { BarberosComponent } from './features/admin/barberos/barberos.component';
 import { BarberoFormComponent } from './features/admin/barberos/barbero-form/barbero-form.component';
 import { ServiciosComponent } from './features/admin/servicios/servicios.component';
 import { ServicioFormComponent } from './features/admin/servicios/servicio-form/servicio-form.component';
 import { ReservasPageComponent } from './features/reservas/reservas-page.component';
+import { AgendaBarberoComponent } from './features/barbero/agenda/agenda-barbero.component';
+import { NgModule } from '@angular/core';
+import { LandingComponent } from './components/landing/landing.component';
+
+import { RegisterComponent } from './auth/register/register.component';
 
 export const routes: Routes = [
-    { path: 'admin/login', component: LoginComponent },
-    { path: 'auth/callback', component: AuthCallbackComponent },
+    { 
+    path: '', 
+    component: LandingComponent, // <--- Aquí va el componente nuevo
+    canActivate: [AuthGuard]     // <--- Esto fuerza el login inmediato
+  },
     { path: 'register', component: RegisterComponent },
     { path: 'admin/barberos', component: BarberosComponent },
     { path: 'admin/barberos/nuevo', component: BarberoFormComponent },
