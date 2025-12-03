@@ -30,6 +30,7 @@ public class SecurityConfig {
                 // Configurar reglas de acceso
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/api/v1/usuarios/registro").permitAll()
+                    .requestMatchers("/api/v1/usuarios/login").permitAll()
                     .requestMatchers("/api/v1/usuarios/**").permitAll()
                     // Permite acceso libre a endpoints que empiecen con /public
                     .requestMatchers("/api/v1/public/**").permitAll()

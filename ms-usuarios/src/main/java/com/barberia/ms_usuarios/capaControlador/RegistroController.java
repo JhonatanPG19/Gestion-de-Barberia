@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.barberia.ms_usuarios.capaFachada.dto.LoginRequestDTO;
+import com.barberia.ms_usuarios.capaFachada.dto.LoginResponseDTO;
 import com.barberia.ms_usuarios.capaFachada.dto.RegistroUsuarioDTO;
 import com.barberia.ms_usuarios.capaFachada.dto.UsuarioResponseDTO;
 import com.barberia.ms_usuarios.capaFachada.service.IUsuarioService;
@@ -26,9 +29,22 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/usuarios")
+@CrossOrigin(origins = "http://localhost:4200")
 public class RegistroController {
 
     private final IUsuarioService usuarioService; // Inyectamos la Interfaz, no la implementación
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
+        try {
+            LoginResponseDTO response = usuarioService.login(loginRequest);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+    }
 
     @PostMapping("/registro")
     public ResponseEntity<?> registrar(@RequestBody RegistroUsuarioDTO dto) {

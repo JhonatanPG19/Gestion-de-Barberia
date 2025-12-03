@@ -21,20 +21,36 @@ export class LandingComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    // Si estamos aquí, el AuthGuard ya garantizó que el usuario está logueado.
+    console.log('Landing: Checking authentication...');
+    const auth = await this.keycloak.isLoggedIn();
+    console.log('Landing: Is logged in?', auth);
     
-    // 1. Obtenemos los roles
-    const roles = this.keycloak.getUserRoles();
-    
-    // 2. Decidimos a dónde mandarlo
-    if (roles.includes('ADMIN')) {
-      this.router.navigate(['/admin']);
-    } else if (roles.includes('BARBERO')) {
-      this.router.navigate(['/barbero/agenda']); // Ajusta a tu ruta real
-    } else {
-      // Es un cliente
-      // Si aún no tienes componente de reservas, mándalo a una ruta temporal o crea una
-      this.router.navigate(['/register']); // O '/reservas' cuando exista
+    if (!auth) {
+      console.log('Landing: Not authenticated, redirecting to Keycloak login...');
+      this.keycloak.login({
+        redirectUri: window.location.origin + '/landing'
+      });
+      return;
     }
+
+    const roles = this.keycloak.getUserRoles(true);
+    console.log('Landing: User roles (raw):', roles);
+    const rolesUpper = roles.map((role) => role.toUpperCase());
+    console.log('Landing: User roles (normalized):', rolesUpper);
+
+    if (rolesUpper.includes('ADMIN')) {
+      console.log('Landing: Navigating to admin panel...');
+      await this.router.navigate(['/admin/barberos']);
+      return;
+    }
+
+    if (rolesUpper.includes('BARBERO')) {
+      console.log('Landing: Navigating to barbero agenda...');
+      await this.router.navigate(['/barbero/agenda']);
+      return;
+    }
+
+    console.log('Landing: Navigating to reservas (default for CLIENTE)...');
+    await this.router.navigate(['/reservas']);
   }
 }

@@ -12,6 +12,13 @@ export interface TokenResponse {
   token_type: string;
 }
 
+export interface LoginResponse {
+  token: string;
+  userId: number;
+  username: string;
+  rol: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,6 +28,7 @@ export class AuthService {
   private realm = 'BarberiaRealm';
   private clientId = 'barberia-frontend-client'; // cliente público en Keycloak
   private redirectUri = 'http://localhost:4200/auth/callback'; // debe estar en Valid Redirect URIs
+  private apiUrl = 'http://localhost:8081/api/v1/usuarios'; // ms-usuarios
 
   private pkceVerifierKey = 'pkce_code_verifier';
   private oauthStateKey = 'oauth_state';
@@ -31,6 +39,17 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {}
+
+  // ==== LOGIN PERSONALIZADO (sin Keycloak) ====
+  login(username: string, password: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { username, password }).pipe(
+      tap(response => {
+        localStorage.setItem(this.accessTokenKey, response.token);
+        localStorage.setItem('user_id', response.userId.toString());
+        localStorage.setItem('user_role', response.rol);
+      })
+    );
+  }
 
   // ==== 1. INICIAR LOGIN (desde /admin/login) ====
   startLoginFlow(): void {
