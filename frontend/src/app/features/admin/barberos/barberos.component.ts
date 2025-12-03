@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BarberosService, Barbero } from '../../../core/services/barberos.service';
 import { CommonModule } from '@angular/common';
+import { SweetAlertService } from '../../../core/services/sweet-alert.service';
 
 @Component({
   selector: 'app-barberos',
@@ -12,7 +13,10 @@ import { CommonModule } from '@angular/common';
 export class BarberosComponent implements OnInit {
   barberos: Barbero[] = [];
 
-  constructor(private barberiaService: BarberosService) { }
+  constructor(
+    private barberiaService: BarberosService,
+    private sweetAlertService: SweetAlertService
+  ) { }
 
   ngOnInit() {
     this.cargarBarberos();
@@ -26,31 +30,47 @@ export class BarberosComponent implements OnInit {
   }
 
   inactivarBarbero(id: number) {
-    if (confirm('¿Está seguro de inactivar este barbero?')) {
-      this.barberiaService.getBarbero(id).subscribe(barbero => {
-        // Cambiar estado a "inactivo"
-        const barberoInactivo = { ...barbero, estado: 'inactivo' };
-        this.barberiaService.updateBarbero(id, barberoInactivo).subscribe(() => {
-          this.cargarBarberos(); // Recargar la lista
-        });
+    this.barberiaService.getBarbero(id).subscribe(barbero => {
+      this.sweetAlertService.confirmarCambioEstado('inactivar', barbero.nombre).then(confirmado => {
+        if (confirmado) {
+          const barberoInactivo = { ...barbero, estado: 'inactivo' };
+          this.barberiaService.updateBarbero(id, barberoInactivo).subscribe({
+            next: () => {
+              this.sweetAlertService.mostrarExito('inactivado', barbero.nombre);
+              this.cargarBarberos();
+            },
+            error: (error) => {
+              console.error('Error al inactivar barbero:', error);
+              this.sweetAlertService.mostrarError('No se pudo inactivar el barbero. Por favor, intente nuevamente.');
+            }
+          });
+        }
       });
-    }
+    });
   }
 
   // src/app/features/admin/barberos/barberos.component.ts
   cambiarEstado(id: number, nuevoEstado: string) {
-    const confirmMsg = nuevoEstado === 'activo'
-      ? '¿Activar este barbero?'
-      : '¿Inactivar este barbero?';
-
-    if (confirm(confirmMsg)) {
-      this.barberiaService.getBarbero(id).subscribe(barbero => {
-        const barberoActualizado = { ...barbero, estado: nuevoEstado };
-        this.barberiaService.updateBarbero(id, barberoActualizado).subscribe(() => {
-          this.cargarBarberos(); // Recargar lista
-        });
+    this.barberiaService.getBarbero(id).subscribe(barbero => {
+      const accion = nuevoEstado === 'activo' ? 'activar' : 'inactivar';
+      
+      this.sweetAlertService.confirmarCambioEstado(accion, barbero.nombre).then(confirmado => {
+        if (confirmado) {
+          const barberoActualizado = { ...barbero, estado: nuevoEstado };
+          this.barberiaService.updateBarbero(id, barberoActualizado).subscribe({
+            next: () => {
+              const accionPasado = nuevoEstado === 'activo' ? 'activado' : 'inactivado';
+              this.sweetAlertService.mostrarExito(accionPasado, barbero.nombre);
+              this.cargarBarberos();
+            },
+            error: (error) => {
+              console.error(`Error al ${accion} barbero:`, error);
+              this.sweetAlertService.mostrarError(`No se pudo ${accion} el barbero. Por favor, intente nuevamente.`);
+            }
+          });
+        }
       });
-    }
+    });
   }
 
 }

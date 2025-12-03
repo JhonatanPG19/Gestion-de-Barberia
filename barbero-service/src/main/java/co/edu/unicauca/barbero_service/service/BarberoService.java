@@ -31,7 +31,6 @@ public class BarberoService {
     private static final LocalTime HORA_CIERRE_LUNES_VIERNES = LocalTime.of(19, 0);
     private static final LocalTime HORA_APERTURA_SABADO = LocalTime.of(9, 0);
     private static final LocalTime HORA_CIERRE_SABADO = LocalTime.of(18, 0);
-    private static final Set<String> DIAS_CERRADO = Set.of("DOMINGO");
 
     public List<Barbero> findAll() {
         return repository.findAll();

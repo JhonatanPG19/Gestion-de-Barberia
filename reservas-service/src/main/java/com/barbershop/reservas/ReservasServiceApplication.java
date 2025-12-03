@@ -22,5 +22,5 @@ public class ReservasServiceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ReservasServiceApplication.class, args);
-    }x|
+    }
 }

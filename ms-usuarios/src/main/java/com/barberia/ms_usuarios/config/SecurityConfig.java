@@ -3,7 +3,6 @@ package com.barberia.ms_usuarios.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -60,6 +59,7 @@ public class SecurityConfig {
     // Clase interna para extraer los roles del JSON de Keycloak
     class KeycloakRealmRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
         @Override
+        @SuppressWarnings("unchecked")
         public Collection<GrantedAuthority> convert(Jwt jwt) {
             // Keycloak pone los roles dentro de: realm_access -> roles
             Map<String, Object> realmAccess = (Map<String, Object>) jwt.getClaims().get("realm_access");

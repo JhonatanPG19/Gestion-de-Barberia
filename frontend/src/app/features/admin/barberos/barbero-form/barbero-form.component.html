@@ -95,7 +95,7 @@
     <div class="mb-3">
       <label class="form-label">Días laborables</label>
       <div class="form-check" *ngFor="let dia of diasSemana">
-        <input class="form-check-input" type="checkbox" [id]="'dia-' + dia" [title]="'Marcar ' + dia + ' como día laborable'" [attr.aria-label]="'Marcar ' + dia + ' como día laborable'" placeholder=""
+        <input class="form-check-input" type="checkbox" [id]="'dia-' + dia" [title]="'Marcar ' + dia + ' como día laborable'" [attr.aria-label]="'Marcar ' + dia + ' como día laborable'"
           [checked]="barberoForm.value.diasLaborables?.includes(dia)"
           (change)="toggleDia(dia, !!$any($event.target)?.checked)">
         <label class="form-check-label" [for]="'dia-' + dia">{{ dia }}</label>

@@ -142,6 +142,7 @@ public class RabbitMQConfig {
 
     // Message Converter
     @Bean
+    @SuppressWarnings("deprecation")
     public MessageConverter jsonMessageConverter() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
