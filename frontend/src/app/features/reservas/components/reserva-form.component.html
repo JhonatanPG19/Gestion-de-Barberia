@@ -11,48 +11,53 @@
 
   <form [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
     <div class="field-group">
-      <label for="barbero">Barbero</label>
-      <select id="barbero" formControlName="barberoId" [disabled]="loading()">
+      <label for="barbero">Barbero *</label>
+      <select id="barbero" formControlName="barberoId" [disabled]="loading()"
+        [class.is-invalid]="formulario.get('barberoId')?.touched && formulario.get('barberoId')?.invalid"
+        [class.is-valid]="formulario.get('barberoId')?.touched && formulario.get('barberoId')?.valid">
         <option value="0" disabled>Selecciona un barbero</option>
         <option *ngFor="let barbero of barberos()" [value]="barbero.id">
           {{ barbero.nombre }}
         </option>
       </select>
-      <span class="error" *ngIf="campoInvalido('barberoId')"
-        >Selecciona un barbero.</span
-      >
+      <span class="error" *ngIf="campoInvalido('barberoId')">
+        ⚠️ Selecciona un barbero
+      </span>
     </div>
 
     <div class="field-group">
-      <label for="servicio">Servicio</label>
-      <select id="servicio" formControlName="servicioId" [disabled]="loading()">
+      <label for="servicio">Servicio *</label>
+      <select id="servicio" formControlName="servicioId" [disabled]="loading()"
+        [class.is-invalid]="formulario.get('servicioId')?.touched && formulario.get('servicioId')?.invalid"
+        [class.is-valid]="formulario.get('servicioId')?.touched && formulario.get('servicioId')?.valid">
         <option value="0" disabled>Selecciona un servicio</option>
         <option *ngFor="let servicio of servicios()" [value]="servicio.id">
-          {{ servicio.nombre }} - ${{ servicio.precio | number : "1.0-0" }} ({{
-            servicio.duracionMinutos
-          }}
-          min)
+          {{ servicio.nombre }} - ${{ servicio.precio | number : "1.0-0" }} ({{ servicio.duracionMinutos }} min)
         </option>
       </select>
-      <span class="error" *ngIf="campoInvalido('servicioId')"
-        >Selecciona un servicio.</span
-      >
+      <span class="error" *ngIf="campoInvalido('servicioId')">
+        ⚠️ Selecciona un servicio
+      </span>
     </div>
 
     <div class="grid-two">
       <div class="field-group">
-        <label for="fecha">Fecha</label>
-        <input id="fecha" type="date" formControlName="fecha" />
-        <span class="error" *ngIf="campoInvalido('fecha')"
-          >Selecciona una fecha.</span
-        >
+        <label for="fecha">Fecha *</label>
+        <input id="fecha" type="date" formControlName="fecha" placeholder="YYYY-MM-DD"
+          [class.is-invalid]="formulario.get('fecha')?.touched && formulario.get('fecha')?.invalid"
+          [class.is-valid]="formulario.get('fecha')?.touched && formulario.get('fecha')?.valid" />
+        <span class="error" *ngIf="campoInvalido('fecha')">
+          ⚠️ Selecciona una fecha
+        </span>
       </div>
       <div class="field-group">
-        <label for="hora">Hora</label>
-        <input id="hora" type="time" formControlName="hora" />
-        <span class="error" *ngIf="campoInvalido('hora')"
-          >Selecciona una hora.</span
-        >
+        <label for="hora">Hora *</label>
+        <input id="hora" type="time" formControlName="hora" placeholder="HH:MM"
+          [class.is-invalid]="formulario.get('hora')?.touched && formulario.get('hora')?.invalid"
+          [class.is-valid]="formulario.get('hora')?.touched && formulario.get('hora')?.valid" />
+        <span class="error" *ngIf="campoInvalido('hora')">
+          ⚠️ Selecciona una hora
+        </span>
       </div>
     </div>
 
@@ -62,8 +67,10 @@
         id="observaciones"
         rows="3"
         formControlName="observaciones"
-        placeholder="Preferencias, recordatorios, etc."
+        placeholder="Preferencias, recordatorios, etc. (opcional)"
+        maxlength="500"
       ></textarea>
+      <small class="text-muted">Máximo 500 caracteres</small>
     </div>
 
     <div class="field-group">

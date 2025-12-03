@@ -31,7 +31,7 @@ export class ReservaFormComponent implements OnInit {
     servicioId: [0, [Validators.required, Validators.min(1)]],
     fecha: ['', Validators.required],
     hora: ['', Validators.required],
-    observaciones: [''],
+    observaciones: ['', Validators.maxLength(500)],
     esWalkIn: [false]
   });
 

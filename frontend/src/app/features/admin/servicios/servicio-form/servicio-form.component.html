@@ -5,44 +5,45 @@
     <!-- Nombre -->
     <div class="mb-3">
       <label class="form-label">Nombre *</label>
-      <input type="text" class="form-control" formControlName="nombre">
-      <div *ngIf="servicioForm.get('nombre')?.invalid && servicioForm.get('nombre')?.touched" class="text-danger">
-        Nombre es obligatorio
+      <input type="text" class="form-control" formControlName="nombre" placeholder="Ej: Corte de cabello"
+        [class.is-invalid]="servicioForm.get('nombre')?.touched && servicioForm.get('nombre')?.invalid"
+        [class.is-valid]="servicioForm.get('nombre')?.touched && servicioForm.get('nombre')?.valid">
+      <div class="invalid-feedback" *ngIf="servicioForm.get('nombre')?.touched && servicioForm.get('nombre')?.invalid">
+        ⚠️ El nombre es obligatorio
       </div>
     </div>
 
     <!-- Descripción -->
     <div class="mb-3">
       <label class="form-label">Descripción</label>
-      <textarea class="form-control" formControlName="descripcion"></textarea>
+      <textarea class="form-control" formControlName="descripcion" placeholder="Descripción del servicio (opcional)" rows="3"></textarea>
     </div>
 
     <!-- Duración (≥45 minutos) -->
     <div class="mb-3">
       <label class="form-label">Duración (minutos) *</label>
-      <input type="number" class="form-control" formControlName="duracionMinutos">
-      <div *ngIf="servicioForm.get('duracionMinutos')?.invalid && servicioForm.get('duracionMinutos')?.touched"
-        class="text-danger mt-1">
-        <span *ngIf="servicioForm.get('duracionMinutos')?.errors?.['required']">
-          La duración es obligatoria.
-        </span>
-        <span *ngIf="servicioForm.get('duracionMinutos')?.errors?.['min']">
-          La duración mínima es 45 minutos.
-        </span>
+      <input type="number" class="form-control" formControlName="duracionMinutos" placeholder="Ej: 45"
+        [class.is-invalid]="servicioForm.get('duracionMinutos')?.touched && servicioForm.get('duracionMinutos')?.invalid"
+        [class.is-valid]="servicioForm.get('duracionMinutos')?.touched && servicioForm.get('duracionMinutos')?.valid">
+      <div class="invalid-feedback" *ngIf="servicioForm.get('duracionMinutos')?.touched && servicioForm.get('duracionMinutos')?.errors?.['required']">
+        ⚠️ La duración es obligatoria
+      </div>
+      <div class="invalid-feedback" *ngIf="servicioForm.get('duracionMinutos')?.touched && servicioForm.get('duracionMinutos')?.errors?.['min']">
+        ⚠️ La duración mínima es 45 minutos
       </div>
     </div>
 
     <!-- Precio -->
     <div class="mb-3">
-      <label class="form-label">Precio ($)*</label>
-      <input type="number" step="0.01" class="form-control" formControlName="precio">
-      <div *ngIf="servicioForm.get('precio')?.invalid && servicioForm.get('precio')?.touched" class="text-danger mt-1">
-        <span *ngIf="servicioForm.get('precio')?.errors?.['required']">
-          El precio es obligatorio.
-        </span>
-        <span *ngIf="servicioForm.get('precio')?.errors?.['min']">
-          El precio debe ser mayor a 0.
-        </span>
+      <label class="form-label">Precio ($) *</label>
+      <input type="number" step="0.01" class="form-control" formControlName="precio" placeholder="Ej: 25000"
+        [class.is-invalid]="servicioForm.get('precio')?.touched && servicioForm.get('precio')?.invalid"
+        [class.is-valid]="servicioForm.get('precio')?.touched && servicioForm.get('precio')?.valid">
+      <div class="invalid-feedback" *ngIf="servicioForm.get('precio')?.touched && servicioForm.get('precio')?.errors?.['required']">
+        ⚠️ El precio es obligatorio
+      </div>
+      <div class="invalid-feedback" *ngIf="servicioForm.get('precio')?.touched && servicioForm.get('precio')?.errors?.['min']">
+        ⚠️ El precio debe ser mayor a 0
       </div>
     </div>
 

@@ -25,10 +25,10 @@ export class ServicioFormComponent implements OnInit {
     private barberiaService: BarberosService
   ) {
     this.servicioForm = this.fb.group({
-      nombre: ['', Validators.required],
-      descripcion: [''],
-      duracionMinutos: [45, [Validators.required, Validators.min(45)]],
-      precio: [0, [Validators.required, Validators.min(0.01)]],
+      nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      descripcion: ['', Validators.maxLength(500)],
+      duracionMinutos: [45, [Validators.required, Validators.min(45), Validators.max(300)]],
+      precio: [0, [Validators.required, Validators.min(0.01), Validators.max(1000000)]],
       barberosIds: [[]] // Array de IDs de barberos seleccionados
     });
   }

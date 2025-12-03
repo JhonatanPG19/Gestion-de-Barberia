@@ -19,7 +19,7 @@
     <!-- Nombre -->
     <div class="mb-3">
       <label class="form-label">Nombre *</label>
-      <input type="text" class="form-control" formControlName="nombre"
+      <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese el nombre del barbero"
         [class.is-invalid]="barberoForm.controls['nombre'].touched && barberoForm.controls['nombre'].invalid"
         [class.is-valid]="barberoForm.controls['nombre'].touched && barberoForm.controls['nombre'].valid">
       <div class="invalid-feedback" *ngIf="barberoForm.controls['nombre'].touched && barberoForm.controls['nombre'].errors?.['required']">
@@ -33,7 +33,7 @@
     <!-- Teléfono -->
     <div class="mb-3">
       <label class="form-label">Teléfono *</label>
-      <input type="text" class="form-control" formControlName="telefono" maxlength="10"
+      <input type="text" class="form-control" formControlName="telefono" maxlength="10" placeholder="Ej: 3106376873"
         [class.is-invalid]="barberoForm.controls['telefono'].touched && barberoForm.controls['telefono'].invalid"
         [class.is-valid]="barberoForm.controls['telefono'].touched && barberoForm.controls['telefono'].valid">
       <div class="invalid-feedback" *ngIf="barberoForm.controls['telefono'].touched && barberoForm.controls['telefono'].errors?.['required']">
@@ -47,7 +47,7 @@
     <!-- Email -->
     <div class="mb-3">
       <label class="form-label">Email *</label>
-      <input type="email" class="form-control" formControlName="email"
+      <input type="email" class="form-control" formControlName="email" placeholder="ejemplo@correo.com"
         [class.is-invalid]="barberoForm.controls['email'].touched && barberoForm.controls['email'].invalid"
         [class.is-valid]="barberoForm.controls['email'].touched && barberoForm.controls['email'].valid">
       <div class="invalid-feedback" *ngIf="barberoForm.controls['email'].touched && barberoForm.controls['email'].errors?.['required']">
