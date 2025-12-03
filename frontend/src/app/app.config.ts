@@ -30,7 +30,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(KeycloakAngularModule),  // Importar módulo de Keycloak
     {
       provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
+      useFactory: initializeKeycloak, 
       multi: true,
       deps: [KeycloakService]
     }
