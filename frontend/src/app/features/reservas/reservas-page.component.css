@@ -7,7 +7,7 @@
 
 .hero {
   text-align: center;
-  background: radial-gradient(circle at top, rgba(99, 102, 241, 0.15), transparent 70%);
+  background: radial-gradient(circle at top, rgba(155, 135, 245, 0.2), transparent 70%);
   padding: 2rem 1rem;
   border-radius: 20px;
 }
