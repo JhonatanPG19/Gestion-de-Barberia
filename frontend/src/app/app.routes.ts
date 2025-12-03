@@ -7,10 +7,20 @@ import { ReservasPageComponent } from './features/reservas/reservas-page.compone
 import { RegisterComponent } from './auth/register/register.component';
 import { AgendaBarberoComponent } from './features/barbero/agenda/agenda-barbero.component';
 import { LoginComponent } from './auth/login/login.component';
+import { AdminDashboardComponent } from './features/admin/admin-dashboard/admin-dashboard.component';
+import { AdminReservaFormComponent } from './features/admin/reservas/admin-reserva-form.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  {
+    path: 'admin',
+    component: AdminDashboardComponent
+  },
+  {
+    path: 'admin/reservas/crear',
+    component: AdminReservaFormComponent
+  },
   {
     path: 'admin/barberos',
     component: BarberosComponent
