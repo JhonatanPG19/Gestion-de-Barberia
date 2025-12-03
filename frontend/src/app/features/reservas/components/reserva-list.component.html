@@ -20,19 +20,19 @@
   <div class="stats">
     <article>
       <span>Total</span>
-      <strong>{{ resumen?.total ?? 0 }}</strong>
+      <strong>{{ resumen.total }}</strong>
     </article>
     <article>
       <span>Pendientes</span>
-      <strong>{{ resumen?.pendientes ?? 0 }}</strong>
+      <strong>{{ resumen.pendientes }}</strong>
     </article>
     <article>
       <span>Confirmadas</span>
-      <strong>{{ resumen?.confirmadas ?? 0 }}</strong>
+      <strong>{{ resumen.confirmadas }}</strong>
     </article>
     <article>
       <span>Canceladas</span>
-      <strong>{{ resumen?.canceladas ?? 0 }}</strong>
+      <strong>{{ resumen.canceladas }}</strong>
     </article>
   </div>
 
@@ -55,10 +55,6 @@
           <div>
             <dt>Fecha</dt>
             <dd>{{ reserva.fecha }} a las {{ reserva.hora }}</dd>
-          </div>
-          <div>
-            <dt>Teléfono</dt>
-            <dd>{{ reserva.telefono }}</dd>
           </div>
           <div *ngIf="reserva.notas">
             <dt>Notas</dt>

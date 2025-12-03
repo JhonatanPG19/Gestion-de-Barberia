@@ -1,8 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { NotificationService } from '../../../services/notification.service';
 
 interface Reserva {
   id: number;
@@ -19,7 +20,7 @@ interface Reserva {
   selector: 'app-agenda-barbero',
   templateUrl: 'agenda-barbero.component.html',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule]
+  imports: [CommonModule, FormsModule]
 })
 export class AgendaBarberoComponent implements OnInit {
   reservas = signal<Reserva[]>([]);
@@ -30,7 +31,11 @@ export class AgendaBarberoComponent implements OnInit {
   // Obtener barberoId del localStorage (userId del usuario logueado)
   private barberoId: number = 0;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    public router: Router,
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit() {
     this.getBarberoId();
@@ -195,11 +200,12 @@ export class AgendaBarberoComponent implements OnInit {
     observable.subscribe({
       next: () => {
         console.log('Estado actualizado correctamente');
+        this.notificationService.toast('Estado actualizado exitosamente', 'success');
         this.cargarTodasLasReservas();
       },
       error: (err) => {
         console.error('Error al cambiar estado:', err);
-        alert('Error al cambiar el estado de la reserva');
+        this.notificationService.handleError(err, 'Error al cambiar el estado de la reserva');
         // Recargar para revertir el cambio en el UI
         this.cargarTodasLasReservas();
       }
@@ -208,15 +214,27 @@ export class AgendaBarberoComponent implements OnInit {
 
   iniciarServicio(id: number) {
     this.http.put(`http://localhost:8084/api/v1/reservas/${id}/iniciar`, {}).subscribe({
-      next: () => this.cargarTodasLasReservas(),
-      error: (err) => console.error('Error al iniciar servicio:', err)
+      next: () => {
+        this.notificationService.toast('Servicio iniciado', 'success');
+        this.cargarTodasLasReservas();
+      },
+      error: (err) => {
+        console.error('Error al iniciar servicio:', err);
+        this.notificationService.handleError(err, 'Error al iniciar el servicio');
+      }
     });
   }
 
   completarServicio(id: number) {
     this.http.put(`http://localhost:8084/api/v1/reservas/${id}/completar`, {}).subscribe({
-      next: () => this.cargarTodasLasReservas(),
-      error: (err) => console.error('Error al completar servicio:', err)
+      next: () => {
+        this.notificationService.toast('Servicio completado', 'success');
+        this.cargarTodasLasReservas();
+      },
+      error: (err) => {
+        console.error('Error al completar servicio:', err);
+        this.notificationService.handleError(err, 'Error al completar el servicio');
+      }
     });
   }
 }

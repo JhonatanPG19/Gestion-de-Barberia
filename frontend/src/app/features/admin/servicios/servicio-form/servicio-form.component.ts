@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ServiciosService, Servicio } from '../../../../core/services/servicios.service';
 import { BarberosService, Barbero } from '../../../../core/services/barberos.service';
+import { NotificationService } from '../../../../services/notification.service';
 
 @Component({
   selector: 'app-servicio-form',
@@ -22,7 +23,8 @@ export class ServicioFormComponent implements OnInit {
     private route: ActivatedRoute,
     public router: Router,
     private serviciosService: ServiciosService,
-    private barberiaService: BarberosService
+    private barberiaService: BarberosService,
+    private notificationService: NotificationService
   ) {
     this.servicioForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
@@ -35,8 +37,13 @@ export class ServicioFormComponent implements OnInit {
 
   ngOnInit() {
     // Cargar lista de barberos (siempre, para el selector)
-    this.barberiaService.getBarberos().subscribe(data => {
-      this.barberos = data;
+    this.barberiaService.getBarberos().subscribe({
+      next: (data) => {
+        this.barberos = data;
+      },
+      error: (err) => {
+        this.notificationService.handleError(err, 'Error al cargar barberos');
+      }
     });
 
     const id = this.route.snapshot.paramMap.get('id');
@@ -48,25 +55,45 @@ export class ServicioFormComponent implements OnInit {
   }
 
   cargarServicio(id: number) {
-    this.serviciosService.getServicio(id).subscribe(servicio => {
-      this.servicioForm.patchValue(servicio);
+    this.serviciosService.getServicio(id).subscribe({
+      next: (servicio) => {
+        this.servicioForm.patchValue(servicio);
+      },
+      error: (err) => {
+        this.notificationService.handleError(err, 'Error al cargar el servicio');
+      }
     });
   }
 
   onSubmit() {
     if (this.servicioForm.valid) {
-      //const servicioData: Servicio = this.servicioForm.value;
       const servicioData = this.servicioForm.value;
 
       if (this.editMode && this.servicioId) {
-        this.serviciosService.updateServicio(this.servicioId, servicioData).subscribe(() => {
-          this.router.navigate(['/admin/servicios']);
+        this.serviciosService.updateServicio(this.servicioId, servicioData).subscribe({
+          next: () => {
+            this.notificationService.success('Servicio actualizado exitosamente').then(() => {
+              this.router.navigate(['/admin/servicios']);
+            });
+          },
+          error: (err) => {
+            this.notificationService.handleError(err, 'Error al actualizar el servicio');
+          }
         });
       } else {
-        this.serviciosService.createServicio(servicioData).subscribe(() => {
-          this.router.navigate(['/admin/servicios']);
+        this.serviciosService.createServicio(servicioData).subscribe({
+          next: () => {
+            this.notificationService.success('Servicio creado exitosamente').then(() => {
+              this.router.navigate(['/admin/servicios']);
+            });
+          },
+          error: (err) => {
+            this.notificationService.handleError(err, 'Error al crear el servicio');
+          }
         });
       }
+    } else {
+      this.notificationService.warning('Por favor, complete todos los campos obligatorios', 'Formulario incompleto');
     }
   }
 

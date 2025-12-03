@@ -51,7 +51,7 @@
     <div class="mb-3">
       <label class="form-label">Barberos que ofrecen este servicio</label>
       <div class="form-check" *ngFor="let barbero of barberos">
-        <input class="form-check-input" type="checkbox" [id]="'barbero-' + barbero.id"
+        <input class="form-check-input" type="checkbox" [id]="'barbero-' + barbero.id" [attr.aria-label]="'Asignar servicio a ' + barbero.nombre" placeholder=""
           [checked]="servicioForm.value.barberosIds?.includes(barbero.id)"
           (change)="toggleBarbero(barbero.id!, $event)" />
         <label class="form-check-label" [for]="'barbero-' + barbero.id">
@@ -61,11 +61,13 @@
     </div>
 
     <!-- Botones -->
-    <button type="submit" class="btn btn-success" [disabled]="!servicioForm.valid">
-      {{ editMode ? 'Actualizar' : 'Guardar' }}
-    </button>
-    <button type="button" class="btn btn-secondary ms-2" (click)="router.navigate(['/admin/servicios'])">
-      Cancelar
-    </button>
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-success" [disabled]="!servicioForm.valid">
+        {{ editMode ? 'Actualizar' : 'Guardar' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="router.navigate(['/admin/servicios'])">
+        ← Volver
+      </button>
+    </div>
   </form>
 </div>

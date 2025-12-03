@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BarberosService, Barbero } from '../../../../core/services/barberos.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { NotificationService } from '../../../../services/notification.service';
 
 interface Usuario {
   id: number;
@@ -37,7 +38,8 @@ export class BarberoFormComponent implements OnInit {
     private route: ActivatedRoute,
     public router: Router,
     private barberiaService: BarberosService,
-    private http: HttpClient
+    private http: HttpClient,
+    private notificationService: NotificationService
   ) {
     this.barberoForm = this.fb.group({
       userId: ['', Validators.required],
@@ -86,7 +88,7 @@ export class BarberoFormComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar barbero:', err);
-        alert('No se pudo cargar el barbero. Verifica la conexión con el backend.');
+        this.notificationService.handleError(err, 'No se pudo cargar el barbero');
       }
     });
   }
@@ -111,35 +113,38 @@ export class BarberoFormComponent implements OnInit {
 
       save$.subscribe({
         next: () => {
-          this.router.navigate(['/admin/barberos']);
+          const mensaje = this.editMode ? 'Barbero actualizado exitosamente' : 'Barbero creado exitosamente';
+          this.notificationService.success(mensaje).then(() => {
+            this.router.navigate(['/admin/barberos']);
+          });
         },
         error: (err) => {
-          let mensaje = 'Error al guardar el barbero.';
-          //Detectar error de email duplicado
-          if (err.status === 400 || err.status === 500) {
-            mensaje = 'Ya existe un barbero con ese correo electrónico.';
-          }
-          console.error('Error:', err);
-          alert(mensaje);
+          this.notificationService.handleError(err, 'Error al guardar el barbero');
         }
       });
     } else {
-      alert('Por favor, complete todos los campos obligatorios.');
+      this.notificationService.warning('Por favor, complete todos los campos obligatorios.', 'Formulario incompleto');
     }
   }
 
   eliminarBarbero() {
-    if (confirm('¿Está seguro de eliminar PERMANENTEMENTE este barbero?\n¡Esta acción no se puede deshacer!')) {
-      this.barberiaService.eliminarFisico(this.barberId!).subscribe({
-        next: () => {
-          this.router.navigate(['/admin/barberos']);
-        },
-        error: (err) => {
-          console.error('Error al eliminar:', err);
-          alert('No se puede eliminar: el barbero tiene reservas asociadas.');
-        }
-      });
-    }
+    this.notificationService.confirm(
+      '¿Está seguro de eliminar PERMANENTEMENTE este barbero? ¡Esta acción no se puede deshacer!',
+      'Confirmar eliminación'
+    ).then((result) => {
+      if (result.isConfirmed) {
+        this.barberiaService.eliminarFisico(this.barberId!).subscribe({
+          next: () => {
+            this.notificationService.success('Barbero eliminado exitosamente').then(() => {
+              this.router.navigate(['/admin/barberos']);
+            });
+          },
+          error: (err) => {
+            this.notificationService.handleError(err, 'No se puede eliminar el barbero');
+          }
+        });
+      }
+    });
   }
 
 }

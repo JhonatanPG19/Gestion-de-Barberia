@@ -67,4 +67,21 @@ public interface ReservaRepository extends JpaRepository<ReservaEntity, Long> {
             @Param("barberoId") Long barberoId,
             @Param("instante") LocalDateTime instante,
             @Param("estados") Collection<EstadoReserva> estados);
+
+    @Query("SELECT COUNT(r) FROM ReservaEntity r WHERE r.clienteId = :clienteId " +
+           "AND DATE(r.fechaHora) = :fecha " +
+           "AND r.estado IN ('CONFIRMADA', 'PENDIENTE', 'EN_PROCESO')")
+    long countReservasActivasPorClienteYFecha(
+            @Param("clienteId") Long clienteId,
+            @Param("fecha") LocalDate fecha);
+
+    @Query("SELECT r FROM ReservaEntity r WHERE r.barberoId = :barberoId " +
+           "AND r.estado IN ('CONFIRMADA', 'PENDIENTE', 'EN_PROCESO') " +
+           "AND ((r.fechaHora <= :fin AND r.fechaHoraFin > :inicio) " +
+           "OR (ABS(TIMESTAMPDIFF(MINUTE, r.fechaHoraFin, :inicio)) < 10) " +
+           "OR (ABS(TIMESTAMPDIFF(MINUTE, :fin, r.fechaHora)) < 10))")
+    List<ReservaEntity> findReservasConflictoConBuffer(
+            @Param("barberoId") Long barberoId,
+            @Param("inicio") LocalDateTime inicio,
+            @Param("fin") LocalDateTime fin);
 }

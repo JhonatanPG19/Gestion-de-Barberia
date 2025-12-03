@@ -2,14 +2,57 @@
   <header class="topbar">
     <div class="brand">
       <img src="assets/logo.png" alt="Logo Barbería" class="brand__logo-img">
-      <div>
-        <p class="eyebrow">Gestión de Barbería</p>
-        <strong>Panel administrativo</strong>
+      <div class="brand__info">
+        <h1 class="brand__title">Barbería El Mago</h1>
+        <p class="brand__subtitle">✨ Estilo y elegancia profesional</p>
       </div>
+    </div>
+    <div class="header-decoration">
+      <div class="decoration-circle"></div>
+      <div class="decoration-circle"></div>
+      <div class="decoration-circle"></div>
     </div>
   </header>
 
   <main>
     <router-outlet></router-outlet>
   </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <img src="assets/logo.png" alt="Logo Barbería" class="footer-logo">
+        <h3 class="footer-title">Barbería El Mago</h3>
+        <p class="footer-text">Tu estilo, nuestra pasión</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4 class="footer-heading">Contacto</h4>
+        <p class="footer-text">📞 +57 300 123 4567</p>
+        <p class="footer-text">📧 info&#64;barberiaelmago.com</p>
+        <p class="footer-text">📍 Calle Principal #123, Popayán</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4 class="footer-heading">Horarios</h4>
+        <p class="footer-text">Lunes - Viernes: 9:00 AM - 7:00 PM</p>
+        <p class="footer-text">Sábados: 9:00 AM - 6:00 PM</p>
+        <p class="footer-text">Domingos: Cerrado</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4 class="footer-heading">Síguenos</h4>
+        <div class="social-links">
+          <a href="#" class="social-link">📘 Facebook</a>
+          <a href="#" class="social-link">📷 Instagram</a>
+          <a href="#" class="social-link">🐦 Twitter</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2025 Barbería El Mago. Todos los derechos reservados.</p>
+      <p>Desarrollado con 💜 por el equipo de desarrollo</p>
+    </div>
+  </footer>
 </div>

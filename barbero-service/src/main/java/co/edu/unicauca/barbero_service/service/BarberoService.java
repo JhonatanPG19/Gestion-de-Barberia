@@ -26,6 +26,13 @@ public class BarberoService {
     @Autowired
     private BarberoRepository repository;
 
+    // Horarios del negocio
+    private static final LocalTime HORA_APERTURA_LUNES_VIERNES = LocalTime.of(9, 0);
+    private static final LocalTime HORA_CIERRE_LUNES_VIERNES = LocalTime.of(19, 0);
+    private static final LocalTime HORA_APERTURA_SABADO = LocalTime.of(9, 0);
+    private static final LocalTime HORA_CIERRE_SABADO = LocalTime.of(18, 0);
+    private static final Set<String> DIAS_CERRADO = Set.of("DOMINGO");
+
     public List<Barbero> findAll() {
         return repository.findAll();
     }
@@ -113,6 +120,9 @@ public class BarberoService {
             throw new IllegalArgumentException("Ya existe un barbero con ese email: " + barbero.getEmail());
         }
 
+        // ✅ Validar horarios del negocio
+        validarHorariosDeNegocio(barbero);
+
         barbero.setId(null);
         barbero.setCreatedAt(LocalDateTime.now());
         barbero.setUpdatedAt(LocalDateTime.now());
@@ -128,6 +138,9 @@ public class BarberoService {
     @Transactional
     public Barbero update(Integer id, Barbero barberoDetails) {
         Barbero existing = findById(id);
+        
+        // ✅ Validar horarios del negocio
+        validarHorariosDeNegocio(barberoDetails);
         
         if (barberoDetails.getUserId() != null) {
             existing.setUserId(barberoDetails.getUserId());
@@ -171,6 +184,91 @@ public class BarberoService {
         nuevo.setDiasLaborables("Lunes,Martes,Miercoles,Jueves,Viernes,Sabado");
 
         return repository.save(nuevo);
+    }
+
+    /**
+     * Valida que los horarios del barbero respeten los horarios del negocio
+     */
+    private void validarHorariosDeNegocio(Barbero barbero) {
+        if (barbero.getHorarioInicioLaboral() == null || barbero.getHorarioFinLaboral() == null) {
+            throw new IllegalArgumentException("Los horarios de inicio y fin laboral son obligatorios");
+        }
+
+        if (barbero.getDiasLaborables() == null || barbero.getDiasLaborables().trim().isEmpty()) {
+            throw new IllegalArgumentException("Debe especificar al menos un día laboral");
+        }
+
+        // Parsear días laborales
+        Set<String> diasLaborables = Arrays.stream(barbero.getDiasLaborables().split(","))
+                .map(String::trim)
+                .map(d -> d.toUpperCase(Locale.ROOT))
+                .collect(Collectors.toSet());
+
+        // Validar que no incluya domingos
+        if (diasLaborables.contains("DOMINGO")) {
+            throw new IllegalArgumentException(
+                "No se puede trabajar los domingos. El negocio está cerrado los domingos.");
+        }
+
+        // Determinar si trabaja sábados
+        boolean trabajaSabado = diasLaborables.contains("SABADO") || diasLaborables.contains("SÁBADO");
+        boolean trabajaEntreSemana = diasLaborables.stream()
+                .anyMatch(d -> Set.of("LUNES", "MARTES", "MIERCOLES", "MIÉRCOLES", "JUEVES", "VIERNES").contains(d));
+
+        LocalTime horaInicio = barbero.getHorarioInicioLaboral();
+        LocalTime horaFin = barbero.getHorarioFinLaboral();
+
+        // Validar horarios según días
+        if (trabajaEntreSemana) {
+            if (horaInicio.isBefore(HORA_APERTURA_LUNES_VIERNES)) {
+                throw new IllegalArgumentException(
+                    String.format("El horario de inicio de lunes a viernes no puede ser antes de %s",
+                        HORA_APERTURA_LUNES_VIERNES));
+            }
+            if (horaFin.isAfter(HORA_CIERRE_LUNES_VIERNES)) {
+                throw new IllegalArgumentException(
+                    String.format("El horario de fin de lunes a viernes no puede ser después de %s",
+                        HORA_CIERRE_LUNES_VIERNES));
+            }
+        }
+
+        if (trabajaSabado) {
+            if (horaInicio.isBefore(HORA_APERTURA_SABADO)) {
+                throw new IllegalArgumentException(
+                    String.format("El horario de inicio los sábados no puede ser antes de %s",
+                        HORA_APERTURA_SABADO));
+            }
+            if (horaFin.isAfter(HORA_CIERRE_SABADO)) {
+                throw new IllegalArgumentException(
+                    String.format("El horario de fin los sábados no puede ser después de %s (el negocio cierra a las 6:00 PM los sábados)",
+                        HORA_CIERRE_SABADO));
+            }
+        }
+
+        // Validar que el horario de inicio sea antes del de fin
+        if (horaInicio.isAfter(horaFin) || horaInicio.equals(horaFin)) {
+            throw new IllegalArgumentException(
+                "El horario de inicio debe ser antes del horario de fin");
+        }
+
+        // Validar horarios de descanso si existen
+        if (barbero.getHoraInicioDescanso() != null && barbero.getHoraFinDescanso() != null) {
+            if (barbero.getHoraInicioDescanso().isBefore(horaInicio) || 
+                barbero.getHoraInicioDescanso().isAfter(horaFin)) {
+                throw new IllegalArgumentException(
+                    "El horario de inicio de descanso debe estar dentro del horario laboral");
+            }
+            if (barbero.getHoraFinDescanso().isBefore(horaInicio) || 
+                barbero.getHoraFinDescanso().isAfter(horaFin)) {
+                throw new IllegalArgumentException(
+                    "El horario de fin de descanso debe estar dentro del horario laboral");
+            }
+            if (barbero.getHoraInicioDescanso().isAfter(barbero.getHoraFinDescanso()) ||
+                barbero.getHoraInicioDescanso().equals(barbero.getHoraFinDescanso())) {
+                throw new IllegalArgumentException(
+                    "El horario de inicio de descanso debe ser antes del horario de fin de descanso");
+            }
+        }
     }
 
     @Transactional

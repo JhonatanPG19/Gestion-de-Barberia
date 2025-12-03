@@ -1,54 +1,57 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  Router,
-  RouterStateSnapshot
-} from '@angular/router';
-import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { NotificationService } from '../services/notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard extends KeycloakAuthGuard {
+export class AuthGuard implements CanActivate {
   constructor(
-    protected override readonly router: Router,
-    protected readonly keycloak: KeycloakService
-  ) {
-    super(router, keycloak);
-  }
+    private router: Router,
+    private notificationService: NotificationService
+  ) {}
 
-  // Esta función decide: ¿Pasa o no pasa?
-  public async isAccessAllowed(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Promise<boolean> {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    // Pequeño delay para asegurar que localStorage se haya actualizado después del login
+    const token = localStorage.getItem('access_token');
+    const rol = localStorage.getItem('rol');
     
-    // 1. Si el usuario NO está logueado...
-    if (!this.authenticated) {
-      // ... lo mandamos a la página de Login de Keycloak
-      await this.keycloak.login({
-        redirectUri: window.location.origin + state.url
-      });
+    console.log('AuthGuard - Token:', token);
+    console.log('AuthGuard - Rol:', rol);
+    console.log('AuthGuard - Ruta:', state.url);
+    
+    // 1. Validar si está logueado
+    if (!token || !rol) {
+      console.log('No hay sesión activa, redirigiendo a login');
+      // Solo redirigir si no estamos ya en login
+      if (state.url !== '/login') {
+        this.router.navigate(['/login']);
+      }
       return false;
     }
 
-    // 2. Si está logueado, verificamos Roles (si la ruta los pide)
-    const requiredRoles = route.data['roles'];
-
-    // Si la ruta no exige roles específicos, ¡Pase adelante!
-    if (!Array.isArray(requiredRoles) || requiredRoles.length === 0) {
-      return true;
-    }
-
-    // Si exige roles, miramos si el usuario tiene alguno de ellos
-    const hasRole = requiredRoles.some((role) => this.roles.includes(role));
-
-    if (!hasRole) {
-        // Si entra aquí, es un usuario logueado pero sin permiso (ej: Cliente queriendo ver Admin)
-        alert('No tienes permisos para ver esta sección');
+    // 2. Validar rol según la ruta
+    const requiredRoles = route.data['roles'] as string[] | undefined;
+    
+    if (requiredRoles && requiredRoles.length > 0) {
+      const hasRole = requiredRoles.some(r => r.toUpperCase() === rol.toUpperCase());
+      
+      if (!hasRole) {
+        console.log(`Acceso denegado. Se requiere rol: ${requiredRoles.join(' o ')}, pero tienes: ${rol}`);
+        this.notificationService.warning('No tienes permisos para acceder a esta sección', 'Acceso Denegado');
+        // Redirigir según el rol que tiene
+        if (rol.toUpperCase() === 'ADMIN') {
+          this.router.navigate(['/admin']);
+        } else if (rol.toUpperCase() === 'BARBERO') {
+          this.router.navigate(['/barbero/agenda']);
+        } else {
+          this.router.navigate(['/reservas']);
+        }
         return false;
+      }
     }
 
+    console.log('Acceso permitido');
     return true;
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ServiciosService, Servicio } from '../../../core/services/servicios.service';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-servicios',
@@ -13,7 +14,10 @@ export class ServiciosComponent implements OnInit {
   servicios: Servicio[] = [];
 
 
-  constructor(private serviciosService: ServiciosService) { }
+  constructor(
+    private serviciosService: ServiciosService,
+    private notificationService: NotificationService
+  ) { }
 
   ngOnInit() {
     this.cargarServicios();
@@ -27,23 +31,28 @@ export class ServiciosComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar servicios:', err);
-        alert('No se pudieron cargar los servicios.');
+        this.notificationService.handleError(err, 'No se pudieron cargar los servicios');
       }
     });
   }
 
   // ✅ Método para eliminar
   eliminarServicio(id: number) {
-    if (confirm('¿Eliminar PERMANENTEMENTE este servicio?')) {
-      this.serviciosService.eliminarServicio(id).subscribe({
-        next: () => {
-          this.cargarServicios();
-        },
-        error: (err) => {
-          console.error('Error al eliminar:', err);
-          alert('Error al eliminar el servicio.');
-        }
-      });
-    }
+    this.notificationService.confirm(
+      '¿Está seguro de eliminar PERMANENTEMENTE este servicio?',
+      'Confirmar eliminación'
+    ).then((result) => {
+      if (result.isConfirmed) {
+        this.serviciosService.eliminarServicio(id).subscribe({
+          next: () => {
+            this.notificationService.toast('Servicio eliminado exitosamente', 'success');
+            this.cargarServicios();
+          },
+          error: (err) => {
+            this.notificationService.handleError(err, 'Error al eliminar el servicio');
+          }
+        });
+      }
+    });
   }
 }

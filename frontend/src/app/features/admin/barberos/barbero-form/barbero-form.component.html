@@ -5,7 +5,7 @@
     <!-- Usuario asociado -->
     <div class="mb-3">
       <label class="form-label">Usuario con rol Barbero *</label>
-      <select class="form-select" formControlName="userId">
+      <select class="form-select" formControlName="userId" title="Seleccionar usuario que será barbero">
         <option value="">Seleccione un usuario</option>
         <option *ngFor="let usuario of usuarios" [value]="usuario.id">
           {{ usuario.nombre }} {{ usuario.apellido }} ({{ usuario.username }}) - {{ usuario.correo }}
@@ -61,7 +61,7 @@
     <!-- Estado -->
     <div class="mb-3">
       <label class="form-label">Estado</label>
-      <select class="form-select" formControlName="estado">
+      <select class="form-select" formControlName="estado" title="Seleccionar estado del barbero (activo o inactivo)">
         <option value="activo">Activo</option>
         <option value="inactivo">Inactivo</option>
       </select>
@@ -71,11 +71,11 @@
     <div class="row mb-3">
       <div class="col-md-6">
         <label class="form-label">Inicio laboral *</label>
-        <input type="time" class="form-control" formControlName="horarioInicioLaboral">
+        <input type="time" class="form-control" formControlName="horarioInicioLaboral" title="Horario de inicio de jornada laboral">
       </div>
       <div class="col-md-6">
         <label class="form-label">Fin laboral *</label>
-        <input type="time" class="form-control" formControlName="horarioFinLaboral">
+        <input type="time" class="form-control" formControlName="horarioFinLaboral" title="Horario de fin de jornada laboral">
       </div>
     </div>
 
@@ -83,11 +83,11 @@
     <div class="row mb-3">
       <div class="col-md-6">
         <label class="form-label">Inicio descanso</label>
-        <input type="time" class="form-control" formControlName="horaInicioDescanso">
+        <input type="time" class="form-control" formControlName="horaInicioDescanso" title="Horario de inicio del descanso">
       </div>
       <div class="col-md-6">
         <label class="form-label">Fin descanso</label>
-        <input type="time" class="form-control" formControlName="horaFinDescanso">
+        <input type="time" class="form-control" formControlName="horaFinDescanso" title="Horario de fin del descanso">
       </div>
     </div>
 
@@ -95,7 +95,7 @@
     <div class="mb-3">
       <label class="form-label">Días laborables</label>
       <div class="form-check" *ngFor="let dia of diasSemana">
-        <input class="form-check-input" type="checkbox" [id]="'dia-' + dia"
+        <input class="form-check-input" type="checkbox" [id]="'dia-' + dia" [title]="'Marcar ' + dia + ' como día laborable'" [attr.aria-label]="'Marcar ' + dia + ' como día laborable'" placeholder=""
           [checked]="barberoForm.value.diasLaborables?.includes(dia)"
           (change)="toggleDia(dia, !!$any($event.target)?.checked)">
         <label class="form-check-label" [for]="'dia-' + dia">{{ dia }}</label>
@@ -106,7 +106,7 @@
       {{ editMode ? 'Actualizar' : 'Guardar' }}
     </button>
     <button type="button" class="btn btn-secondary ms-2" (click)="router.navigate(['/admin/barberos'])">
-      Cancelar
+      ← Volver
     </button>
     <div class="mt-4" *ngIf="editMode && barberId">
       <button type="button" class="btn btn-danger" (click)="eliminarBarbero()">

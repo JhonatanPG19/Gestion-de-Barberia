@@ -1,19 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ReservaFormComponent } from './components/reserva-form.component';
 import { ReservaListComponent } from './components/reserva-list.component';
 import { ReservasService, CrearReservaRequest } from './services/reservas.service';
 import { ReservaEstado } from './models/reserva.model';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-reservas-page',
   standalone: true,
-  imports: [CommonModule, ReservaFormComponent, ReservaListComponent],
+  imports: [CommonModule, ReservaListComponent, ReservaFormComponent],
   templateUrl: './reservas-page.component.html',
   styleUrls: ['./reservas-page.component.css']
 })
 export class ReservasPageComponent implements OnInit {
-  private readonly reservasService = inject(ReservasService);
+  readonly reservasService = inject(ReservasService);
+  public router = inject(Router);
+  private notificationService = inject(NotificationService);
 
   readonly reservas = this.reservasService.reservas;
   readonly resumen = this.reservasService.resumen;
@@ -41,17 +45,21 @@ export class ReservasPageComponent implements OnInit {
     }
   }
 
+  volverInicio(): void {
+    this.router.navigate(['/']);
+  }
+
   onCrear(request: CrearReservaRequest): void {
     this.creandoReserva.set(true);
     this.reservasService.crearReserva(request).subscribe({
       next: () => {
         this.creandoReserva.set(false);
-        console.log('Reserva creada exitosamente');
+        this.notificationService.success('Reserva creada exitosamente', '¡Reserva confirmada!');
       },
       error: (err) => {
         this.creandoReserva.set(false);
         console.error('Error al crear reserva:', err);
-        alert('Error al crear reserva: ' + (err.error?.message || err.message));
+        this.notificationService.handleError(err, 'Error al crear la reserva');
       }
     });
   }
@@ -92,12 +100,12 @@ export class ReservasPageComponent implements OnInit {
     observable.subscribe({
       next: () => {
         this.actualizandoEstado.set(false);
-        console.log('Estado actualizado exitosamente');
+        this.notificationService.toast('Estado actualizado exitosamente', 'success');
       },
       error: (err) => {
         this.actualizandoEstado.set(false);
         console.error('Error al actualizar estado:', err);
-        alert('Error al actualizar estado: ' + (err.error?.message || err.message));
+        this.notificationService.handleError(err, 'Error al actualizar el estado');
       }
     });
   }

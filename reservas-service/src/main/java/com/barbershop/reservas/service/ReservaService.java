@@ -358,6 +358,7 @@ public class ReservaService {
                 request.getFechaHora().toString()))) {
             throw new IllegalArgumentException("El barbero no está disponible según su horario laboral");
         }
+        
         // Validar que la fecha es futura
         if (request.getFechaHora().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("No se pueden crear reservas en el pasado");
@@ -367,6 +368,72 @@ public class ReservaService {
         LocalTime horaReserva = request.getFechaHora().toLocalTime();
         if (horaReserva.isBefore(HORA_APERTURA) || horaReserva.isAfter(HORA_CIERRE)) {
             throw new IllegalArgumentException("La reserva debe estar dentro del horario de atención");
+        }
+        
+        // NUEVA VALIDACIÓN: Máximo 2 reservas por cliente por día
+        LocalDate fechaReserva = request.getFechaHora().toLocalDate();
+        long reservasDelClienteEnElDia = reservaRepository.countReservasActivasPorClienteYFecha(
+                request.getClienteId(), fechaReserva);
+        
+        if (reservasDelClienteEnElDia >= 2) {
+            throw new IllegalArgumentException(
+                "El cliente ya tiene 2 reservas activas en este día. No se pueden hacer más de 2 reservas por día.");
+        }
+        
+        // NUEVA VALIDACIÓN: Validar tiempo mínimo de 10 minutos entre turnos
+        validarTiempoMinimoEntreTurnos(request);
+    }
+
+    private void validarTiempoMinimoEntreTurnos(CrearReservaRequest request) {
+        // Obtener duración del servicio
+        var servicioInfo = servicioFeignClient.obtenerServicio(request.getServicioId());
+        int duracionServicio = servicioInfo.getDuracion();
+        
+        LocalDateTime inicioSolicitado = request.getFechaHora();
+        LocalDateTime finSolicitado = inicioSolicitado.plusMinutes(duracionServicio).plusMinutes(TIEMPO_BUFFER_MINUTOS);
+        
+        // Buscar reservas que puedan estar muy cerca (dentro de 10 minutos antes o después)
+        List<ReservaEntity> reservasCercanas = reservaRepository.findReservasConflictoConBuffer(
+                request.getBarberoId(),
+                inicioSolicitado,
+                finSolicitado);
+        
+        if (!reservasCercanas.isEmpty()) {
+            // Validar que hay al menos 10 minutos entre turnos
+            for (ReservaEntity reservaExistente : reservasCercanas) {
+                // Calcular diferencia en minutos
+                long minutosAntes = java.time.Duration.between(
+                        reservaExistente.getFechaHoraFin(), inicioSolicitado).toMinutes();
+                long minutosDespues = java.time.Duration.between(
+                        finSolicitado, reservaExistente.getFechaHora()).toMinutes();
+                
+                // Si hay solapamiento directo
+                if (inicioSolicitado.isBefore(reservaExistente.getFechaHoraFin()) && 
+                    finSolicitado.isAfter(reservaExistente.getFechaHora())) {
+                    throw new IllegalArgumentException(
+                        "El horario solicitado se solapa con otra reserva existente.");
+                }
+                
+                // Si la reserva solicitada está muy cerca DESPUÉS de una existente
+                if (minutosAntes >= 0 && minutosAntes < 10) {
+                    throw new IllegalArgumentException(
+                        String.format("Debe haber al menos 10 minutos entre turnos. " +
+                        "La reserva anterior termina a las %s y la nueva comenzaría a las %s (solo %d minutos de diferencia).",
+                        reservaExistente.getFechaHoraFin().toLocalTime(),
+                        inicioSolicitado.toLocalTime(),
+                        minutosAntes));
+                }
+                
+                // Si la reserva solicitada está muy cerca ANTES de una existente
+                if (minutosDespues >= 0 && minutosDespues < 10) {
+                    throw new IllegalArgumentException(
+                        String.format("Debe haber al menos 10 minutos entre turnos. " +
+                        "La nueva reserva terminaría a las %s y la siguiente comienza a las %s (solo %d minutos de diferencia).",
+                        finSolicitado.toLocalTime(),
+                        reservaExistente.getFechaHora().toLocalTime(),
+                        minutosDespues));
+                }
+            }
         }
     }
 

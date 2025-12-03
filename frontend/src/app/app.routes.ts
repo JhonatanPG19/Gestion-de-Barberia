@@ -9,49 +9,70 @@ import { AgendaBarberoComponent } from './features/barbero/agenda/agenda-barbero
 import { LoginComponent } from './auth/login/login.component';
 import { AdminDashboardComponent } from './features/admin/admin-dashboard/admin-dashboard.component';
 import { AdminReservaFormComponent } from './features/admin/reservas/admin-reserva-form.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   {
     path: 'admin',
-    component: AdminDashboardComponent
+    component: AdminDashboardComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
     path: 'admin/reservas/crear',
-    component: AdminReservaFormComponent
+    component: AdminReservaFormComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
     path: 'admin/barberos',
-    component: BarberosComponent
+    component: BarberosComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
     path: 'admin/barberos/nuevo',
-    component: BarberoFormComponent
+    component: BarberoFormComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
     path: 'admin/barberos/:id/editar',
-    component: BarberoFormComponent
+    component: BarberoFormComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
     path: 'admin/servicios',
-    component: ServiciosComponent
+    component: ServiciosComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
     path: 'admin/servicios/nuevo',
-    component: ServicioFormComponent
+    component: ServicioFormComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
     path: 'admin/servicios/:id/editar',
-    component: ServicioFormComponent
+    component: ServicioFormComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
     path: 'barbero/agenda',
-    component: AgendaBarberoComponent
+    component: AgendaBarberoComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['BARBERO', 'ADMIN'] }
   },
   {
     path: 'reservas',
-    component: ReservasPageComponent
+    component: ReservasPageComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['CLIENTE', 'ADMIN'] }
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
