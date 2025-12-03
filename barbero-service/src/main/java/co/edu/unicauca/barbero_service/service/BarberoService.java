@@ -39,6 +39,11 @@ public class BarberoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Barbero no encontrado con ID: " + id));
     }
 
+    public Barbero findByUserId(Integer userId) {
+        return repository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Barbero no encontrado para el usuario con ID: " + userId));
+    }
+
     public boolean estaDisponibleEnFechaHora(Integer id, LocalDate fecha, LocalTime hora) {
         Barbero barbero = findById(id);
 
@@ -110,7 +115,12 @@ public class BarberoService {
 
         barbero.setId(null);
         barbero.setCreatedAt(LocalDateTime.now());
-        barbero.setEstado(EstadoBarbero.activo);
+        barbero.setUpdatedAt(LocalDateTime.now());
+        
+        // Si no tiene estado, asignar activo por defecto
+        if (barbero.getEstado() == null) {
+            barbero.setEstado(EstadoBarbero.activo);
+        }
 
         return repository.save(barbero);
     }
@@ -118,6 +128,10 @@ public class BarberoService {
     @Transactional
     public Barbero update(Integer id, Barbero barberoDetails) {
         Barbero existing = findById(id);
+        
+        if (barberoDetails.getUserId() != null) {
+            existing.setUserId(barberoDetails.getUserId());
+        }
         existing.setNombre(barberoDetails.getNombre());
         existing.setTelefono(barberoDetails.getTelefono());
         existing.setEmail(barberoDetails.getEmail());

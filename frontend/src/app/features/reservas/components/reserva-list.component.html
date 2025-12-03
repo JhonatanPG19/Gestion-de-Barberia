@@ -2,7 +2,7 @@
   <header class="list-card__header">
     <div>
       <p class="eyebrow">Panel de reservas</p>
-      <h2>Agenda del barbero</h2>
+      <h2>Mis Reservas</h2>
       <p class="helper">Filtra por estado y gestiona rápidamente cada cita.</p>
     </div>
     <div class="filters">
@@ -65,19 +65,6 @@
             <dd>{{ reserva.notas }}</dd>
           </div>
         </dl>
-
-        <div class="reserva__actions">
-          <label for="estado-{{ reserva.id }}">Estado</label>
-          <select
-            id="estado-{{ reserva.id }}"
-            [value]="reserva.estado"
-            (change)="onEstadoSelect(reserva.id, $event)"
-          >
-            <option *ngFor="let estado of todosLosEstados" [value]="estado.value">
-              {{ estado.label }}
-            </option>
-          </select>
-        </div>
       </article>
     </div>
   </ng-container>

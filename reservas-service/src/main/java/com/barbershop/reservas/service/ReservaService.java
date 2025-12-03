@@ -215,6 +215,14 @@ public class ReservaService {
     }
 
     @Transactional(readOnly = true)
+    public List<ReservaResponse> obtenerTodasLasReservasPorBarbero(Long barberoId) {
+        return reservaRepository.findByBarberoId(barberoId).stream()
+                .map(this::mapearAResponse)
+                .sorted((r1, r2) -> r2.getFechaHora().compareTo(r1.getFechaHora())) // Más recientes primero
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public List<ReservaResponse> obtenerReservasDelDia(LocalDate fecha) {
         return reservaRepository.findByFecha(fecha).stream()
                 .map(this::mapearAResponse)

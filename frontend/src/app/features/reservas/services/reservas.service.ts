@@ -62,8 +62,7 @@ export class ReservasService {
   });
 
   constructor(private http: HttpClient) {
-    // Cargar reservas al inicializar
-    this.cargarReservas();
+    // No cargar automáticamente, esperar a que el componente llame
   }
 
   // ============ Métodos de UI ============
@@ -199,21 +198,24 @@ export class ReservasService {
   // ============ Métodos auxiliares ============
 
   /**
-   * Cargar todas las reservas (por ejemplo, del día actual)
+   * Cargar reservas de un cliente específico
    */
-  private cargarReservas(): void {
+  cargarReservasCliente(clienteId: number): void {
+    console.log('Cargando reservas para cliente:', clienteId);
     this._loading.set(true);
-    const hoy = new Date().toISOString().split('T')[0]; // Formato: YYYY-MM-DD
     
-    this.obtenerReservasDelDia(hoy).pipe(
+    this.obtenerReservasPorCliente(clienteId).pipe(
       tap((reservas) => {
         const reservasConvertidas = reservas.map(r => this.convertirAReserva(r));
         this._reservas.set(reservasConvertidas);
         this._loading.set(false);
+        this._error.set(null);
       }),
       catchError((error) => {
-        this._error.set(error?.message ?? 'Error al cargar reservas');
+        console.warn('No se pudieron cargar las reservas:', error);
+        this._reservas.set([]);
         this._loading.set(false);
+        this._error.set(null);
         return of([]);
       })
     ).subscribe();

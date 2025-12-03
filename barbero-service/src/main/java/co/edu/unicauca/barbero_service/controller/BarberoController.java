@@ -67,6 +67,12 @@ public class BarberoController {
         return ResponseEntity.ok(service.findById(id));
     }
 
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<Barbero> getByUserId(@PathVariable Integer userId) {
+        Barbero barbero = service.findByUserId(userId);
+        return ResponseEntity.ok(barbero);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Barbero> update(@PathVariable Integer id, @Valid @RequestBody Barbero barbero) {
         Barbero updated = service.update(id, barbero);

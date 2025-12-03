@@ -2,6 +2,20 @@
   <h2>{{ editMode ? 'Editar Barbero' : 'Nuevo Barbero' }}</h2>
 
   <form [formGroup]="barberoForm" (ngSubmit)="onSubmit()">
+    <!-- Usuario asociado -->
+    <div class="mb-3">
+      <label class="form-label">Usuario con rol Barbero *</label>
+      <select class="form-select" formControlName="userId">
+        <option value="">Seleccione un usuario</option>
+        <option *ngFor="let usuario of usuarios" [value]="usuario.id">
+          {{ usuario.nombre }} {{ usuario.apellido }} ({{ usuario.username }}) - {{ usuario.correo }}
+        </option>
+      </select>
+      <small class="form-text text-muted">
+        Este usuario podrá iniciar sesión y ver su agenda de barbero
+      </small>
+    </div>
+
     <!-- Nombre -->
     <div class="mb-3">
       <label class="form-label">Nombre *</label>

@@ -22,6 +22,9 @@ public class Barbero {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "user_id")
+    private Integer userId; // ID del usuario en ms-usuarios con rol BARBERO
+
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
 
@@ -64,6 +67,14 @@ public class Barbero {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getNombre() {

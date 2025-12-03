@@ -41,7 +41,7 @@ export class LoginComponent {
         // Redirigir según rol
         const role = response.rol?.toUpperCase();
         if (role === 'ADMIN') {
-          this.router.navigate(['/admin/barberos']);
+          this.router.navigate(['/admin']);
         } else if (role === 'BARBERO') {
           this.router.navigate(['/barbero/agenda']);
         } else {

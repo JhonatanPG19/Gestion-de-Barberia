@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { ReservaFormComponent } from './components/reserva-form.component';
 import { ReservaListComponent } from './components/reserva-list.component';
 import { ReservasService, CrearReservaRequest } from './services/reservas.service';
@@ -12,7 +12,7 @@ import { ReservaEstado } from './models/reserva.model';
   templateUrl: './reservas-page.component.html',
   styleUrls: ['./reservas-page.component.css']
 })
-export class ReservasPageComponent {
+export class ReservasPageComponent implements OnInit {
   private readonly reservasService = inject(ReservasService);
 
   readonly reservas = this.reservasService.reservas;
@@ -28,6 +28,18 @@ export class ReservasPageComponent {
     const total = this.reservasService.resumen().total;
     return total > 0 ? `Gestiona ${total} reservas activas en un solo lugar.` : 'Aún no hay reservas registradas.';
   });
+
+  ngOnInit(): void {
+    // Cargar reservas del cliente logueado
+    const userId = localStorage.getItem('userId');
+    console.log('UserId del localStorage:', userId);
+    if (userId) {
+      console.log('Llamando a cargarReservasCliente con userId:', userId);
+      this.reservasService.cargarReservasCliente(parseInt(userId));
+    } else {
+      console.error('No se encontró userId en localStorage');
+    }
+  }
 
   onCrear(request: CrearReservaRequest): void {
     this.creandoReserva.set(true);

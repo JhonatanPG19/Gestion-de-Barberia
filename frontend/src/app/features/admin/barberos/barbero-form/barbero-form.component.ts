@@ -4,6 +4,16 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BarberosService, Barbero } from '../../../../core/services/barberos.service';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+
+interface Usuario {
+  id: number;
+  username: string;
+  nombre: string;
+  apellido: string;
+  correo: string;
+  rol: string;
+}
 
 @Component({
   selector: 'app-barbero-form',
@@ -15,6 +25,7 @@ export class BarberoFormComponent implements OnInit {
   barberoForm: FormGroup;
   editMode = false;
   barberId?: number;
+  usuarios: Usuario[] = [];
 
   // Días de la semana para el select múltiple
   diasSemana = [
@@ -25,9 +36,11 @@ export class BarberoFormComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     public router: Router,
-    private barberiaService: BarberosService
+    private barberiaService: BarberosService,
+    private http: HttpClient
   ) {
     this.barberoForm = this.fb.group({
+      userId: ['', Validators.required],
       nombre: ['', Validators.required],
       telefono: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -41,12 +54,24 @@ export class BarberoFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.cargarUsuariosBarberos();
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.editMode = true;
       this.barberId = +id;
       this.cargarBarbero(this.barberId);
     }
+  }
+
+  cargarUsuariosBarberos() {
+    this.http.get<Usuario[]>('http://localhost:8081/api/v1/usuarios').subscribe({
+      next: (usuarios) => {
+        this.usuarios = usuarios.filter(u => u.rol.toUpperCase() === 'BARBERO');
+      },
+      error: (err) => {
+        console.error('Error al cargar usuarios:', err);
+      }
+    });
   }
 
   cargarBarbero(id: number) {

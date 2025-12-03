@@ -1,31 +1,82 @@
 <div class="container py-4">
-    <h2>Mi Agenda</h2>
-    <p class="text-muted">Hoy: {{ fechaHoy }}</p>
+  <div class="header-section mb-4">
+    <h2>Mi Agenda de Barbero</h2>
+    <p class="text-muted">Gestiona tus reservas y servicios</p>
+  </div>
 
-    <div class="alert alert-{{ estadoBarbero?.estado === 'ocupado' ? 'warning' : 'success' }}" *ngIf="estadoBarbero">
-        <strong>Estado actual:</strong>
-        <span [class.text-danger]="estadoBarbero.estado === 'ocupado'"
-            [class.text-success]="estadoBarbero.estado === 'disponible'">
-            {{ estadoBarbero.estado === 'ocupado' ? 'Ocupado' : 'Disponible' }}
-        </span>
+  <!-- Filtros de estado -->
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <label class="form-label">Filtrar por estado:</label>
+      <div class="btn-group d-flex" role="group">
+        <button class="btn btn-outline-primary" (click)="filtrarPorEstado('todas')">Todas</button>
+        <button class="btn btn-outline-warning" (click)="filtrarPorEstado('PENDIENTE')">Pendientes</button>
+        <button class="btn btn-outline-info" (click)="filtrarPorEstado('CONFIRMADA')">Confirmadas</button>
+        <button class="btn btn-outline-success" (click)="filtrarPorEstado('COMPLETADA')">Completadas</button>
+      </div>
     </div>
+  </div>
 
-    <div class="card" *ngIf="estadoBarbero?.reservaActual">
-        <div class="card-body">
-            <h5 class="card-title">Servicio en curso</h5>
-            <p class="card-text">
-                <strong>Cliente:</strong> {{ estadoBarbero?.reservaActual?.cliente }}<br>
-                <strong>Servicio:</strong> {{ estadoBarbero?.reservaActual?.servicio }}<br>
-                <strong>Hora:</strong> {{ estadoBarbero?.reservaActual?.horaInicio }} - {{
-                estadoBarbero?.reservaActual?.horaFin }}
+  <!-- Loading -->
+  <div *ngIf="loading()" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="!loading() && errorMessage()" class="alert alert-warning">
+    {{ errorMessage() }}
+  </div>
+
+  <!-- Lista de reservas -->
+  <div *ngIf="!loading() && reservasFiltradas().length > 0" class="reservas-list">
+    <div class="card mb-3" *ngFor="let reserva of reservasFiltradas()">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h5 class="card-title mb-2">
+              {{ reserva.clienteNombre }}
+              <span class="badge bg-{{ getEstadoClass(reserva.estado) }} ms-2">
+                {{ getEstadoTexto(reserva.estado) }}
+              </span>
+            </h5>
+            <p class="card-text mb-1">
+              <strong>Servicio:</strong> {{ reserva.servicioNombre }}
             </p>
-            <button class="btn btn-sm btn-outline-primary me-1">Inicio</button>
-            <button class="btn btn-sm btn-outline-success">Fin</button>
+            <p class="card-text mb-1">
+              <strong>Hora:</strong> {{ formatearHora(reserva.fechaHora) }} - {{ formatearHora(reserva.fechaHoraFin) }}
+              <span class="text-muted">({{ reserva.tiempoEstimado }} min)</span>
+            </p>
+            <p class="card-text mb-0" *ngIf="reserva.observaciones">
+              <strong>Observaciones:</strong> {{ reserva.observaciones }}
+            </p>
+          </div>
+          <div class="col-md-4 text-end">
+            <div class="d-flex flex-column gap-2">
+              <label for="estado-{{ reserva.id }}" class="form-label mb-1">Cambiar estado:</label>
+              <select 
+                id="estado-{{ reserva.id }}"
+                class="form-select"
+                [value]="reserva.estado"
+                (change)="cambiarEstado(reserva.id, $event)"
+              >
+                <option value="PENDIENTE">Pendiente</option>
+                <option value="CONFIRMADA">Confirmada</option>
+                <option value="EN_PROCESO">En Proceso</option>
+                <option value="COMPLETADA">Completada</option>
+                <option value="CANCELADA">Cancelada</option>
+                <option value="NO_ASISTIO">No Asistió</option>
+              </select>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <div class="alert alert-info"
-        *ngIf="estadoBarbero && !estadoBarbero.reservaActual && estadoBarbero.estado === 'disponible'">
-        No tienes reservas activas en este momento.
-    </div>
+  <!-- Sin reservas -->
+  <div *ngIf="!loading() && reservasFiltradas().length === 0" class="alert alert-info">
+    No tienes reservas registradas.
+  </div>
 </div>

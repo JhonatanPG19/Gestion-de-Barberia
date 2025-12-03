@@ -64,6 +64,13 @@ public class ReservaController {
         return ResponseEntity.ok(reservas);
     }
 
+    @GetMapping("/barbero/{barberoId}/todas")
+    @Operation(summary = "Obtener todas las reservas de un barbero")
+    public ResponseEntity<List<ReservaResponse>> obtenerTodasLasReservasPorBarbero(@PathVariable Long barberoId) {
+        List<ReservaResponse> reservas = reservaService.obtenerTodasLasReservasPorBarbero(barberoId);
+        return ResponseEntity.ok(reservas);
+    }
+
     @GetMapping("/barbero/{barberoId}/estado")
     @Operation(summary = "Consultar estado en tiempo real del barbero")
     public ResponseEntity<EstadoBarberoResponse> obtenerEstadoEnTiempoReal(@PathVariable Long barberoId) {

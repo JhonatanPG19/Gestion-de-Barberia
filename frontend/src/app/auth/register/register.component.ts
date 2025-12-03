@@ -3,7 +3,6 @@ import { FormBuilder, Validators, ReactiveFormsModule, FormGroup, FormControl, A
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
-import { KeycloakService } from 'keycloak-angular';
 
 interface RegistroForm {
   username: FormControl<string>;
@@ -31,9 +30,7 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
-    private router: Router,
-    private keycloak: KeycloakService // <--- INYECTAR SERVICIO
-
+    private router: Router
   ) {
     this.registerForm = this.fb.group<RegistroForm>({
       username: this.fb.control('', { 
@@ -223,7 +220,7 @@ export class RegisterComponent {
         this.loading = false;
         this.successMessage = 'Registro exitoso. Ahora puedes iniciar sesión.';
         setTimeout(() => {
-            this.keycloak.login(); // <--- ESTO LLEVA AL LOGIN REAL
+          this.router.navigate(['/login']);
         }, 1500);
       },
       error: (err) => {
@@ -235,6 +232,6 @@ export class RegisterComponent {
   }
 
   goToLogin(): void {
-    this.keycloak.login();
+    this.router.navigate(['/login']);
   }
 }

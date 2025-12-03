@@ -17,6 +17,8 @@ public interface ReservaRepository extends JpaRepository<ReservaEntity, Long> {
     
     List<ReservaEntity> findByClienteId(Long clienteId);
     
+    List<ReservaEntity> findByBarberoId(Long barberoId);
+    
     @Query("SELECT r FROM ReservaEntity r WHERE r.barberoId = :barberoId " +
            "AND DATE(r.fechaHora) = :fecha ORDER BY r.fechaHora")
     List<ReservaEntity> findByBarberoIdAndFecha(@Param("barberoId") Long barberoId, 
